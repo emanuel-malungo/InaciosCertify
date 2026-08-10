@@ -3,7 +3,7 @@ import logo from "@/assets/images/logo.png"
 
 export default function Header() {
     return (
-        <header className="">
+        <header className="fixed top-0 left-0 w-full z-50">
             <div className="mx-auto container flex items-center justify-between py-4 px-6 lg:px-0">
                 <div>
                     <Image src={logo} alt="EKANDA" width={100} height={200} />
