@@ -1,6 +1,7 @@
 
 import Image from "next/image";
 import bgWhite from "@/assets/images/bg_white.png"
+import edina from "@/assets/images/hero_dina.png"
 
 export default function Hero()
 {
