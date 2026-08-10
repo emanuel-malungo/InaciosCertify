@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+:root {
+  --background: #FFFFFF;
+  --foreground: #252321;
+  
+  --primary: #A62400;
+  --primary-hover: #8E2000;
+  --accent: #DA2F01;
+  --gold: #B38A5A;
+  
+  --background-soft: #FAF8F5;
+  --surface-warm: #F3EEE7;
+  
+  --text: #252321;
+  --text-muted: #746F6A;
+  
+  --border: #E8E1DA;
+  
+  --success: #287A4B;
+  --warning: #B7791F;
+  --error: #B42318;
+  
+  --radius-card: 16px;
+  --radius-button: 10px;
+  --radius-input: 10px;
+  
+  --shadow-premium: 0 4px 20px rgba(37, 35, 33, 0.06);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-accent: var(--accent);
+  --color-gold: var(--gold);
+  --color-background-soft: var(--background-soft);
+  --color-surface-warm: var(--surface-warm);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-border: var(--border);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui;
+  --font-heading: var(--font-montserrat), ui-sans-serif, system-ui;
+
+  --radius-card: var(--radius-card);
+  --radius-button: var(--radius-button);
+  --radius-input: var(--radius-input);
+
+  --shadow-premium: var(--shadow-premium);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
