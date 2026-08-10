@@ -13,6 +13,8 @@ export default function Hero()
                 priority
                 className="object-cover z-0" 
             />
+            {/* Overlay com a cor institucional */}
+            <div className="absolute inset-0 z-10 bg-white/50" />
         </section>
     )
 }
