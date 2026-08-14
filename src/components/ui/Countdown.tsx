@@ -40,21 +40,21 @@ export default function Countdown() {
     ];
 
     return (
-        <div className="flex items-end gap-3">
+        <div className="flex items-end gap-2 sm:gap-3">
             {units.map(({ label, value }, i) => (
-                <div key={label} className="flex items-end gap-3">
+                <div key={label} className="flex items-end gap-2 sm:gap-3">
                     <div className="flex flex-col items-center">
                         <span
                             className="font-black text-primary tabular-nums leading-none"
                             style={{
                                 fontFamily: "var(--font-montserrat)",
-                                fontSize: "clamp(1.6rem, 3vw, 2.25rem)",
+                                fontSize: "clamp(1.35rem, 2.8vw, 2.25rem)",
                             }}
                         >
                             {String(value).padStart(2, "0")}
                         </span>
                         <span
-                            className="text-[10px] uppercase tracking-widest text-text-muted mt-1"
+                            className="text-[9px] sm:text-[10px] uppercase tracking-widest text-text-muted mt-1"
                             style={{ fontFamily: "var(--font-inter)" }}
                         >
                             {label}
@@ -62,10 +62,9 @@ export default function Countdown() {
                     </div>
                     {i < units.length - 1 && (
                         <span
-                            className="text-gold font-black mb-5 leading-none"
+                            className="text-gold font-black mb-3 sm:mb-4 leading-none text-sm sm:text-lg"
                             style={{
                                 fontFamily: "var(--font-montserrat)",
-                                fontSize: "1.4rem",
                             }}
                         >
                             :
