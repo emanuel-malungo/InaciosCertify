@@ -5,7 +5,7 @@ import Countdown from "@/components/ui/Countdown";
 
 export default function Hero() {
     return (
-        <section className="relative min-h-[100dvh] lg:h-screen lg:min-h-[700px] w-full overflow-hidden bg-background-soft flex flex-col justify-between">
+        <section className="relative min-h-[100dvh] lg:h-screen lg:min-h-[720px] w-full overflow-hidden bg-background-soft flex flex-col justify-between">
 
             {/* Fundo com textura de ondas */}
             <Image
@@ -16,15 +16,15 @@ export default function Hero() {
                 className="object-cover z-0"
             />
 
-            {/* Linha vermelha no topo */}
+            {/* Linha vermelha de destaque no topo */}
             <div className="absolute top-0 left-0 w-full h-[3px] sm:h-[4px] z-30 bg-primary" />
 
-            {/* Grid principal — 1 coluna em mobile, 2 colunas em tablet (md) e desktop (lg) */}
-            <div className="relative z-20 w-full h-full flex-1 flex items-center pt-24 pb-12 sm:pt-28 sm:pb-16 md:pt-24 lg:pt-0 lg:pb-0">
-                <div className="mx-auto container h-full px-5 sm:px-8 lg:px-0 grid grid-cols-1 md:grid-cols-2 items-center gap-8 lg:gap-0">
+            {/* Container Principal */}
+            <div className="relative z-20 w-full flex-1 flex items-center pt-24 pb-12 sm:pt-28 sm:pb-16 md:pt-24 lg:pt-0 lg:pb-0">
+                <div className="mx-auto container h-full px-5 sm:px-8 lg:px-0 grid grid-cols-1 md:grid-cols-2 items-center gap-6 lg:gap-0">
 
-                    {/* ── Coluna esquerda: Conteúdo textual ── */}
-                    <div className="flex flex-col justify-center lg:justify-end pb-0 lg:pb-14 gap-4 sm:gap-5 md:gap-6 z-10">
+                    {/* ── Coluna Esquerda (Mobile & Desktop) ── */}
+                    <div className="flex flex-col justify-center lg:justify-end pb-0 lg:pb-14 gap-4 sm:gap-5 md:gap-6 z-10 max-w-xl mx-auto md:max-w-none md:mx-0">
 
                         {/* Eyebrow */}
                         <p
@@ -39,7 +39,7 @@ export default function Hero() {
                             className="font-black uppercase text-primary leading-[0.92] tracking-tight"
                             style={{
                                 fontFamily: "var(--font-montserrat)",
-                                fontSize: "clamp(2.35rem, 5.5vw, 5.75rem)",
+                                fontSize: "clamp(2.4rem, 5.5vw, 5.75rem)",
                             }}
                         >
                             PORTFÓLIO<br />
@@ -60,23 +60,22 @@ export default function Hero() {
                         {/* Linha divisória */}
                         <div className="w-12 sm:w-16 h-[2px] bg-primary/30" />
 
-                        {/* Card visual da Dina para telas pequenas (Mobile) */}
-                        <div className="relative w-full md:hidden rounded-[var(--radius-card)] overflow-hidden aspect-[16/10] max-h-56 shadow-premium border border-border">
+                        {/* ── Imagem recortada da Dina no Mobile (Sem card, integrada organicamente com aura suave) ── */}
+                        <div className="relative w-full h-72 sm:h-84 md:hidden my-1 flex items-end justify-center pointer-events-none">
+                            {/* Brilho/Aura dourada suave de fundo */}
+                            <div className="absolute w-52 h-52 sm:w-64 sm:h-64 rounded-full bg-gold/15 blur-3xl -z-10" />
+                            
+                            {/* Imagem transparente da Dina em destaque */}
                             <Image
                                 src={edina}
-                                alt="Oradora — Portfólio Comunique"
+                                alt="Dina — Oradora Portfólio Comunique"
                                 fill
                                 priority
-                                className="object-cover object-top"
+                                className="object-contain object-bottom drop-shadow-lg"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-transparent to-transparent flex items-end p-3">
-                                <span
-                                    className="text-white text-[10px] font-semibold uppercase tracking-wider"
-                                    style={{ fontFamily: "var(--font-montserrat)" }}
-                                >
-                                    Dina · Oradora Portfólio Comunique
-                                </span>
-                            </div>
+                            
+                            {/* Fade suave na base para fundir perfeitamente com o fundo */}
+                            <div className="absolute bottom-0 left-0 w-full h-10 bg-gradient-to-t from-background-soft to-transparent" />
                         </div>
 
                         {/* Descrição */}
@@ -97,7 +96,7 @@ export default function Hero() {
                         <div className="pt-1">
                             <a
                                 href="#participar"
-                                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 bg-primary hover:bg-primary-hover font-bold text-xs tracking-[0.15em] text-white uppercase transition-all duration-200 active:scale-95 text-center shadow-premium"
+                                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-primary hover:bg-primary-hover font-bold text-xs tracking-[0.15em] text-white uppercase transition-all duration-200 active:scale-95 shadow-premium text-center"
                                 style={{
                                     borderRadius: "var(--radius-button)",
                                     fontFamily: "var(--font-montserrat)",
@@ -131,11 +130,11 @@ export default function Hero() {
                         </div>
                     </div>
 
-                    {/* ── Coluna direita: Foto da Dina (Tablet e Desktop) ── */}
-                    <div className="relative hidden md:block h-full min-h-[450px] lg:min-h-full w-full">
+                    {/* ── Coluna Direita: Foto da Dina (Tablet e Desktop) ── */}
+                    <div className="relative hidden md:block h-full min-h-[480px] lg:min-h-full w-full">
                         <Image
                             src={edina}
-                            alt="Oradora — Portfólio Comunique"
+                            alt="Dina — Oradora Portfólio Comunique"
                             fill
                             priority
                             className="object-cover object-top"
