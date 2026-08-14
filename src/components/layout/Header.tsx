@@ -46,13 +46,15 @@ export default function Header() {
 
   return (
     <>
-      {/* ── Header Principal Fixo ── */}
+      {/* ── Header Principal Fixo & Transparente ── */}
       <header
-        className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 bg-background/95 backdrop-blur-md border-b border-border/50 ${
-          isScrolled ? "py-3 shadow-premium" : "py-4 md:py-5"
+        className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${
+          isScrolled
+            ? "bg-background/90 backdrop-blur-md border-b border-border/50 py-3.5 shadow-premium"
+            : "bg-transparent py-5 lg:py-6 border-b border-transparent"
         }`}
       >
-        <div className="mx-auto container flex items-center justify-between px-6 lg:px-0">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-8">
           {/* Logo */}
           <a
             href="#"
@@ -61,24 +63,24 @@ export default function Header() {
           >
             <Image
               src={logo}
-              alt="Inácios Certify"
+              alt="Ekanda GROUP"
               width={120}
-              height={48}
+              height={44}
               priority
-              className="h-8 md:h-10 w-auto object-contain"
+              className="h-8 lg:h-9 w-auto object-contain"
             />
           </a>
 
           {/* Desktop Navigation */}
           <nav
-            className="hidden lg:flex items-center space-x-8"
+            className="hidden lg:flex items-center space-x-9"
             aria-label="Navegação principal"
           >
             {navLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
-                className="relative text-xs font-semibold text-text hover:text-primary tracking-[0.1em] uppercase transition-colors duration-200 py-1 group"
+                className="relative text-[13px] font-semibold text-text/90 hover:text-primary tracking-[0.14em] uppercase transition-colors duration-200 py-1 group"
                 style={{ fontFamily: "var(--font-montserrat)" }}
               >
                 {link.label}
@@ -91,7 +93,7 @@ export default function Header() {
           <div className="hidden lg:flex items-center">
             <a
               href="#emitir"
-              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-[0.14em] transition-all duration-200 active:scale-95 shadow-premium"
+              className="inline-flex items-center justify-center px-6 py-2.5 bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-[0.14em] transition-all duration-200 active:scale-[0.98] shadow-premium"
               style={{
                 borderRadius: "var(--radius-button)",
                 fontFamily: "var(--font-montserrat)",
@@ -148,9 +150,9 @@ export default function Header() {
             >
               <Image
                 src={logo}
-                alt="Inácios Certify"
+                alt="Ekanda GROUP"
                 width={120}
-                height={48}
+                height={44}
                 className="h-8 w-auto object-contain brightness-0 invert"
               />
             </a>
@@ -185,7 +187,7 @@ export default function Header() {
                 <a
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center justify-between py-3 px-3.5 rounded-[var(--radius-button)] text-xs font-semibold uppercase tracking-[0.12em] text-white hover:text-gold hover:bg-white/10 transition-all duration-200"
+                  className="flex items-center justify-between py-3 px-3.5 rounded-[var(--radius-button)] text-xs font-semibold uppercase tracking-[0.14em] text-white hover:text-gold hover:bg-white/10 transition-all duration-200"
                   style={{ fontFamily: "var(--font-montserrat)" }}
                 >
                   <span>{link.label}</span>
