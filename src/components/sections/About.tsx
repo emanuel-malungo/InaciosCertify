@@ -6,12 +6,8 @@ import {
   Megaphone, 
   Building2, 
   ArrowRight,
-  Sparkles,
-  ShieldCheck,
-  CheckCircle2,
-  Award
 } from "lucide-react";
-import edina from "@/assets/images/hero_dina3.png";
+import edina from "@/assets/images/dina_about2.png";
 import bgWhite from "@/assets/images/bg_white.png";
 
 // Métricas e dados do slide oficial "Enquadramento e Conceito"
@@ -111,10 +107,10 @@ export default function AboutSection() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
 
         {/* ── BLOCO 1: ENQUADRAMENTO E CONCEITO (Layout Fiel ao Design de Referência) ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center mb-24 lg:mb-32">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-stretch mb-24 lg:mb-32">
           
           {/* Coluna Esquerda: Título, Descrição e 3 Cards Vermelhos com Badges Circulares */}
-          <div className="lg:col-span-7 flex flex-col justify-center">
+          <div className="lg:col-span-7 flex flex-col justify-center py-6">
             
             {/* Título Principal em Destaque */}
             <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl uppercase text-primary tracking-tight leading-tight mb-6">
@@ -160,33 +156,28 @@ export default function AboutSection() {
             </div>
           </div>
 
-          {/* Coluna Direita: Imagem de Destaque de Dina Simão com Moldura Arredondada */}
-          <div className="lg:col-span-5 flex justify-center">
-            <div className="relative w-full max-w-md lg:max-w-none rounded-3xl lg:rounded-l-3xl lg:rounded-r-none bg-surface-warm/80 border border-border/80 shadow-premium overflow-hidden flex flex-col justify-end items-center pt-8 px-4 pb-0">
-              
-              {/* Efeito de iluminação suave atrás da figura */}
-              <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gold/15 rounded-full blur-3xl pointer-events-none" />
+          {/* Coluna Direita: Imagem de Destaque de Dina Simão ocupando a altura toda */}
+          <div className="lg:col-span-5 relative w-full h-[500px] lg:h-auto rounded-3xl overflow-hidden shadow-premium bg-surface-warm/80 border border-border/80">
+            {/* Efeito de iluminação suave atrás da figura */}
+            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gold/15 rounded-full blur-3xl pointer-events-none" />
 
-              {/* Foto de Dina Simão */}
-              <div className="relative w-full h-[380px] sm:h-[460px] lg:h-[520px] flex items-end justify-center z-10">
-                <Image
-                  src={edina}
-                  alt="Dina Simão — Estrategista de Imagem & Fundadora Ekanda Group"
-                  fill
-                  priority
-                  className="object-contain object-bottom transition-transform duration-700 hover:scale-102"
-                />
-              </div>
+            {/* Foto de Dina Simão */}
+            <Image
+              src={edina}
+              alt="Dina Simão — Estrategista de Imagem & Fundadora Ekanda Group"
+              fill
+              priority
+              className="object-cover object-top z-10 transition-transform duration-700 hover:scale-105"
+            />
 
-              {/* Tag com Nome e Autoridade */}
-              <div className="absolute bottom-4 left-4 right-4 bg-background/95 backdrop-blur-md py-3 px-4 rounded-button border border-border shadow-md text-center z-20">
-                <p className="font-heading font-black text-xs uppercase tracking-wider text-primary">
-                  Dina Simão
-                </p>
-                <p className="font-sans text-xs text-text-muted">
-                  Mentora Principal & Estrategista de Imagem
-                </p>
-              </div>
+            {/* Tag com Nome e Autoridade */}
+            <div className="absolute bottom-6 left-6 right-6 bg-background/95 backdrop-blur-md py-4 px-4 rounded-button border border-border shadow-lg text-center z-20">
+              <p className="font-heading font-black text-sm uppercase tracking-wider text-primary">
+                Dina Simão
+              </p>
+              <p className="font-sans text-xs text-text-muted mt-1">
+                Mentora Principal & Estrategista de Imagem
+              </p>
             </div>
           </div>
 
