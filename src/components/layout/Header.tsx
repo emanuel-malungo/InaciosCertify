@@ -2,12 +2,19 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { Menu, X, ChevronRight, ArrowRight } from "lucide-react";
 import logo from "@/assets/images/logo.png";
+import Button from "@/components/ui/Button";
 
-const navLinks = [
+interface NavLinkItem {
+  label: string;
+  href: string;
+}
+
+const navLinks: NavLinkItem[] = [
   { label: "Home", href: "#" },
   { label: "Sobre Nós", href: "#sobre" },
-  { label: "Os nossos serviços", href: "#servicos" },
+  { label: "Os Nossos Serviços", href: "#servicos" },
   { label: "Parceiros", href: "#parceiros" },
   { label: "Localização", href: "#localizacao" },
   { label: "Contacte-nos", href: "#contacto" },
@@ -51,7 +58,7 @@ export default function Header() {
       <header
         className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${
           isScrolled
-            ? "bg-background/90 backdrop-blur-md border-b border-border/50 py-3.5 shadow-premium"
+            ? "bg-background/95 backdrop-blur-md border-b border-border/60 py-3.5 shadow-premium"
             : "bg-transparent py-5 lg:py-6 border-b border-transparent"
         }`}
       >
@@ -59,7 +66,7 @@ export default function Header() {
           {/* Logo */}
           <a
             href="#"
-            className="flex items-center transition-opacity hover:opacity-90 focus:outline-none"
+            className="flex items-center transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-button"
             aria-label="Inácios Certify Home"
           >
             <Image
@@ -74,34 +81,26 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav
-            className="hidden lg:flex items-center space-x-9"
+            className="hidden lg:flex items-center space-x-8"
             aria-label="Navegação principal"
           >
             {navLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
-                className="relative text-[13px] font-semibold text-text/90 hover:text-primary tracking-[0.14em] uppercase transition-colors duration-200 py-1 group"
-                style={{ fontFamily: "var(--font-montserrat)" }}
+                className="relative py-1.5 font-heading text-xs font-semibold uppercase tracking-wider text-foreground/85 hover:text-primary transition-colors duration-200 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-button px-1"
               >
                 {link.label}
-                <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-primary transition-all duration-300 ease-out group-hover:w-full" />
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary rounded-full transition-all duration-300 ease-out group-hover:w-full" />
               </a>
             ))}
           </nav>
 
           {/* Desktop CTA Button */}
           <div className="hidden lg:flex items-center">
-            <a
-              href="#emitir"
-              className="inline-flex items-center justify-center px-6 py-2.5 bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-[0.14em] transition-all duration-200 active:scale-[0.98] shadow-premium"
-              style={{
-                borderRadius: "var(--radius-button)",
-                fontFamily: "var(--font-montserrat)",
-              }}
-            >
+            <Button href="#emitir" variant="primary" size="sm">
               Emitir Certificado
-            </a>
+            </Button>
           </div>
 
           {/* Mobile Hamburger Trigger */}
@@ -110,19 +109,15 @@ export default function Header() {
             onClick={() => setIsOpen(true)}
             aria-expanded={isOpen}
             aria-controls="mobile-menu"
-            aria-label="Abrir menu"
-            className="lg:hidden p-2 text-text hover:text-primary focus:outline-none transition-colors rounded-[var(--radius-button)]"
+            aria-label="Abrir menu de navegação"
+            className="lg:hidden p-2 text-foreground hover:text-primary hover:bg-foreground/5 rounded-button focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors"
           >
-            <div className="w-6 h-5 relative flex flex-col justify-between items-center">
-              <span className="h-0.5 w-6 bg-current rounded-full" />
-              <span className="h-0.5 w-6 bg-current rounded-full" />
-              <span className="h-0.5 w-6 bg-current rounded-full" />
-            </div>
+            <Menu className="w-6 h-6" />
           </button>
         </div>
       </header>
 
-      {/* ── Overlay semitransparente na área não ocupada pelo menu (com blur e clique para fechar) ── */}
+      {/* ── Overlay Semitransparente (Com blur e clique para fechar) ── */}
       <div
         className={`lg:hidden fixed inset-0 z-40 bg-foreground/40 backdrop-blur-sm transition-opacity duration-300 ease-in-out ${
           isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
@@ -131,22 +126,22 @@ export default function Header() {
         aria-hidden="true"
       />
 
-      {/* ── Menu Mobile (top-0, fundo vermelho bg-primary, botão próprio de fechar, altura compacta e efeito suave) ── */}
+      {/* ── Menu Mobile ── */}
       <div
         id="mobile-menu"
-        className={`lg:hidden fixed top-0 left-0 w-full z-50 bg-primary text-white rounded-b-[var(--radius-card)] shadow-2xl transition-all duration-300 ease-out transform ${
+        className={`lg:hidden fixed top-0 left-0 w-full z-50 bg-primary text-white rounded-b-card shadow-2xl transition-all duration-300 ease-out transform ${
           isOpen
             ? "translate-y-0 opacity-100 visible"
             : "-translate-y-full opacity-0 invisible pointer-events-none"
         }`}
       >
-        <div className="px-6 py-4 md:py-5">
-          {/* Barra superior do menu mobile com Logo e Botão de Fechar próprio */}
+        <div className="px-6 py-5">
+          {/* Barra superior do menu mobile com Logo e Botão de Fechar */}
           <div className="flex items-center justify-between pb-4 border-b border-white/15">
             <a
               href="#"
               onClick={() => setIsOpen(false)}
-              className="flex items-center"
+              className="flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-button"
               aria-label="Inácios Certify Home"
             >
               <Image
@@ -158,26 +153,13 @@ export default function Header() {
               />
             </a>
 
-            {/* Próprio botão de fechar */}
             <button
               type="button"
               onClick={() => setIsOpen(false)}
               aria-label="Fechar menu"
-              className="p-2 text-white hover:text-gold hover:bg-white/10 rounded-[var(--radius-button)] transition-colors focus:outline-none"
+              className="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-button transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <X className="w-6 h-6" />
             </button>
           </div>
 
@@ -188,23 +170,10 @@ export default function Header() {
                 <a
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center justify-between py-3 px-3.5 rounded-[var(--radius-button)] text-xs font-semibold uppercase tracking-[0.14em] text-white hover:text-gold hover:bg-white/10 transition-all duration-200"
-                  style={{ fontFamily: "var(--font-montserrat)" }}
+                  className="flex items-center justify-between py-3 px-3.5 rounded-button font-heading text-xs font-semibold uppercase tracking-wider text-white/90 hover:text-white hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 >
                   <span>{link.label}</span>
-                  <svg
-                    className="w-4 h-4 text-white/60"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
+                  <ChevronRight className="w-4 h-4 text-white/60" />
                 </a>
               </li>
             ))}
@@ -212,31 +181,16 @@ export default function Header() {
 
           {/* Botão de ação mobile */}
           <div className="pt-3 border-t border-white/15">
-            <a
+            <Button
               href="#emitir"
+              variant="white"
+              size="md"
+              fullWidth
+              rightIcon={<ArrowRight className="w-4 h-4" />}
               onClick={() => setIsOpen(false)}
-              className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-5 bg-white text-primary hover:bg-surface-warm font-bold text-xs uppercase tracking-[0.14em] transition-all duration-200 active:scale-95 shadow-premium"
-              style={{
-                borderRadius: "var(--radius-button)",
-                fontFamily: "var(--font-montserrat)",
-              }}
             >
               Emitir Certificado
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 16 16"
-                fill="none"
-              >
-                <path
-                  d="M3 8h10M9 4l4 4-4 4"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </a>
+            </Button>
           </div>
         </div>
       </div>

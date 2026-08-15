@@ -118,7 +118,7 @@ export default function Hero() {
                         <div className="w-full max-w-[480px] h-px bg-border/80 my-1" />
 
                         {/* Countdown */}
-                        <div className="flex flex-col gap-2">
+                        {/* <div className="flex flex-col gap-2">
                             <p
                                 className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.24em] text-text-muted"
                                 style={{ fontFamily: "var(--font-montserrat)" }}
@@ -132,8 +132,8 @@ export default function Hero() {
                             >
                                 8 de Setembro de 2026 · Uma experiência de conhecimento, inspiração e networking.
                             </p>
-                        </div>
-                    </div>
+                        </div>*/}
+                    </div> 
 
                     {/* ── Coluna Direita: Foto da Dina (Desktop & Telas Grandes) ── */}
                     <div className="lg:col-span-5 relative hidden lg:flex items-end justify-center h-full min-h-[600px] pointer-events-none">
