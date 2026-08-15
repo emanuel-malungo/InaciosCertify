@@ -14,7 +14,8 @@ interface NavLinkItem {
 const navLinks: NavLinkItem[] = [
   { label: "Home", href: "#" },
   { label: "Sobre Nós", href: "#sobre" },
-  { label: "Os Nossos Serviços", href: "#servicos" },
+  { label: "Serviços", href: "#servicos" },
+  { label: "Oradores", href: "#oradores" },
   { label: "Parceiros", href: "#parceiros" },
   { label: "Contacte-nos", href: "#contacto" },
 ];

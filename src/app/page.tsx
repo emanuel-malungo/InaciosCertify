@@ -3,6 +3,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import AboutSection from "@/components/sections/About";
 import ServicesSection from "@/components/sections/Services";
+import SpeakersSection from "@/components/sections/Speakers";
 
 export default function Home() {
   return (
@@ -16,9 +17,11 @@ export default function Home() {
       {/* Seção 2: Sobre Nós (#sobre) */}
       <AboutSection />
 
-      {/* Seção 3: Os Nossos Serviços (#servicos) */}
+      {/* Seção 3: Razões para Investir (#servicos) */}
       <ServicesSection />
 
+      {/* Seção 4: Programação Final de Oradores (#oradores) */}
+      <SpeakersSection />
 
       <Footer />
     </main>
