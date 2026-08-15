@@ -107,47 +107,48 @@ export default function AboutSection() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
 
         {/* ── BLOCO 1: ENQUADRAMENTO E CONCEITO (Layout Fiel ao Design de Referência) ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-stretch mb-24 lg:mb-32">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-stretch mb-24 lg:mb-32">
           
           {/* Coluna Esquerda: Título, Descrição e 3 Cards Vermelhos com Badges Circulares */}
-          <div className="lg:col-span-7 flex flex-col justify-center py-6">
-            
-            {/* Título Principal em Destaque */}
-            <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl uppercase text-primary tracking-tight leading-tight mb-6">
-              ENQUADRAMENTO E CONCEITO
-            </h2>
+          <div className="lg:col-span-7 flex flex-col justify-between py-2 lg:py-4">
+            <div>
+              {/* Título Principal em Destaque */}
+              <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-[42px] uppercase text-primary tracking-tight leading-tight mb-6">
+                ENQUADRAMENTO E CONCEITO
+              </h2>
 
-            {/* Texto Conceitual de Alto Impacto */}
-            <p className="font-sans text-base sm:text-lg text-foreground/90 leading-relaxed mb-10">
-              A actividade de Dina Simão, afirma-se como um evento corporativo e cultural de alto impacto estratégico, focado na capacitação, liderança e networking profissional no mercado nacional. Promovido pela plataforma Ekanda, o certame foi desenhado especificamente para impulsionar conexões sólidas entre marcas de prestígio e um público qualificado composto por tomadores de decisão, empreendedores e profissionais liberais.
-            </p>
+              {/* Texto Conceitual de Alto Impacto */}
+              <p className="font-sans text-sm sm:text-base lg:text-[16px] text-foreground/90 leading-relaxed mb-8">
+                A actividade de Dina Simão, afirma-se como um evento corporativo e cultural de alto impacto estratégico, focado na capacitação, liderança e networking profissional no mercado nacional. Promovido pela plataforma Ekanda, o certame foi desenhado especificamente para impulsionar conexões sólidas entre marcas de prestígio e um público qualificado composto por tomadores de decisão, empreendedores e profissionais liberais.
+              </p>
 
-            {/* Subtítulo das Métricas */}
-            <h3 className="font-heading font-bold text-lg sm:text-xl text-primary mb-8">
-              Métricas Indicativas e Alcance:
-            </h3>
+              {/* Subtítulo das Métricas */}
+              <h3 className="font-heading font-bold text-base sm:text-lg lg:text-xl text-primary mb-7">
+                Métricas Indicativas e Alcance:
+              </h3>
+            </div>
 
-            {/* Grid dos 3 Cards com Ícones Flutuantes no Topo */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-4 pt-2">
+            {/* Grid dos 3 Cards com Ícones Flutuantes no Topo e Gradiente Vermelho Intenso */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-4 pt-4">
               {conceptMetrics.map((item) => {
                 const IconComponent = item.icon;
                 return (
                   <div
                     key={item.title}
-                    className="relative bg-primary text-white rounded-card p-5 pt-8 flex flex-col items-center text-center shadow-premium transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group"
+                    className="relative bg-gradient-to-b from-[#A51111] via-[#850505] to-[#550000] text-white rounded-2xl pt-9 pb-6 px-4 flex flex-col items-center text-center shadow-xl shadow-red-950/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl group"
                   >
-                    {/* Badge Circular Flutuante com Ícone */}
-                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-primary border-2 border-white flex items-center justify-center text-white shadow-md transition-transform duration-300 group-hover:scale-110">
+                    {/* Badge Circular Flutuante com Ícone e Borda Branca */}
+                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-gradient-to-b from-[#A51111] to-[#750000] border-2 border-white flex items-center justify-center text-white shadow-md transition-transform duration-300 group-hover:scale-110">
                       <IconComponent className="w-6 h-6" />
                     </div>
 
                     {/* Título do Card */}
-                    <h4 className="font-heading font-bold text-xs sm:text-sm text-white mb-2 leading-snug">
+                    <h4 className="font-heading font-bold text-xs sm:text-[13px] text-white mb-2 leading-snug">
                       {item.title}
                     </h4>
 
                     {/* Descrição do Card */}
-                    <p className="font-sans text-xs text-white/90 leading-relaxed">
+                    <p className="font-sans text-[11px] sm:text-xs text-white/95 leading-relaxed">
                       {item.desc}
                     </p>
                   </div>
@@ -156,29 +157,16 @@ export default function AboutSection() {
             </div>
           </div>
 
-          {/* Coluna Direita: Imagem de Destaque de Dina Simão ocupando a altura toda */}
-          <div className="lg:col-span-5 relative w-full h-[500px] lg:h-auto rounded-3xl overflow-hidden shadow-premium bg-surface-warm/80 border border-border/80">
-            {/* Efeito de iluminação suave atrás da figura */}
-            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gold/15 rounded-full blur-3xl pointer-events-none" />
-
-            {/* Foto de Dina Simão */}
+          {/* Coluna Direita: Imagem de Destaque de Dina Simão ocupando toda a lateral direita e altura total */}
+          <div className="lg:col-span-5 relative w-full h-[480px] sm:h-[560px] lg:h-auto min-h-[520px]  rounded-md overflow-hidden shadow-2xl bg-[#EBE7E0]">
+            {/* Foto de Dina Simão ocupando todo o container exatamente como no slide de referência */}
             <Image
               src={edina}
               alt="Dina Simão — Estrategista de Imagem & Fundadora Ekanda Group"
               fill
               priority
-              className="object-cover object-top z-10 transition-transform duration-700 hover:scale-105"
+              className="object-cover object-[40%_15%] transition-transform duration-700 hover:scale-103"
             />
-
-            {/* Tag com Nome e Autoridade */}
-            <div className="absolute bottom-6 left-6 right-6 bg-background/95 backdrop-blur-md py-4 px-4 rounded-button border border-border shadow-lg text-center z-20">
-              <p className="font-heading font-black text-sm uppercase tracking-wider text-primary">
-                Dina Simão
-              </p>
-              <p className="font-sans text-xs text-text-muted mt-1">
-                Mentora Principal & Estrategista de Imagem
-              </p>
-            </div>
           </div>
 
         </div>
