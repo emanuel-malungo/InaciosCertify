@@ -100,7 +100,7 @@ export default function SpeakersSection() {
             {/* Foto de Dina Simão */}
             <div className="relative w-full max-w-[340px] lg:max-w-none h-[380px] sm:h-[440px] lg:h-[480px] flex items-end justify-center">
               <Image
-                src="/images/speakers/dina_host.png"
+                src="/images/speakers/dina_host3.png"
                 alt="Dina Simão — Abertura e Enquadramento Institucional"
                 fill
                 priority
