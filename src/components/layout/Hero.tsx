@@ -20,6 +20,7 @@ export default function Hero() {
         alt=""
         fill
         priority
+        sizes="100vw"
         className="object-cover z-0"
       />
 
@@ -73,6 +74,7 @@ export default function Hero() {
                 alt="Dina Simão — Oradora Portfólio Comunique"
                 fill
                 priority
+                sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-contain object-bottom drop-shadow-xl"
               />
               <div className="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-background-soft to-transparent" />
@@ -171,6 +173,7 @@ export default function Hero() {
               alt="Dina Simão — Oradora Portfólio Comunique"
               fill
               priority
+              sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-contain object-bottom drop-shadow-2xl"
             />
 

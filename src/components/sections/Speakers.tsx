@@ -76,6 +76,8 @@ export default function SpeakersSection() {
           src={bgWhite}
           alt=""
           fill
+          priority
+          sizes="100vw"
           className="object-cover"
         />
       </div>
@@ -102,6 +104,7 @@ export default function SpeakersSection() {
                 alt="Dina Simão — Abertura e Enquadramento Institucional"
                 fill
                 priority
+                sizes="(max-width: 1024px) 100vw, 33vw"
                 className="object-contain object-bottom drop-shadow-md"
               />
             </div>
@@ -143,6 +146,7 @@ export default function SpeakersSection() {
                   src="/images/speakers/geovany_avatar.jpeg"
                   alt="Geovany Comandala — Apresentador"
                   fill
+                  sizes="128px"
                   className="object-cover"
                 />
               </div>
@@ -177,6 +181,7 @@ export default function SpeakersSection() {
                         src={speaker.image}
                         alt={`${speaker.name} — ${speaker.role}`}
                         fill
+                        sizes="(max-width: 640px) 50vw, 25vw"
                         className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
@@ -207,6 +212,7 @@ export default function SpeakersSection() {
                         src={speaker.image}
                         alt={`${speaker.name} — ${speaker.role}`}
                         fill
+                        sizes="(max-width: 640px) 50vw, 25vw"
                         className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>

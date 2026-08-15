@@ -96,6 +96,8 @@ export default function AboutSection() {
           src={bgWhite}
           alt=""
           fill
+          priority
+          sizes="100vw"
           className="object-cover"
         />
       </div>
@@ -158,13 +160,14 @@ export default function AboutSection() {
           </div>
 
           {/* Coluna Direita: Imagem de Destaque de Dina Simão ocupando toda a lateral direita e altura total */}
-          <div className="lg:col-span-5 relative w-full h-[480px] sm:h-[560px] lg:h-auto min-h-[520px]  rounded-md overflow-hidden shadow-2xl bg-[#EBE7E0]">
+          <div className="lg:col-span-5 relative w-full h-[480px] sm:h-[560px] lg:h-auto min-h-[520px]  rounded-3xl overflow-hidden shadow-2xl bg-[#EBE7E0]">
             {/* Foto de Dina Simão ocupando todo o container exatamente como no slide de referência */}
             <Image
               src={edina}
               alt="Dina Simão — Estrategista de Imagem & Fundadora Ekanda Group"
               fill
               priority
+              sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover object-[40%_15%] transition-transform duration-700 hover:scale-103"
             />
           </div>
