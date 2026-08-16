@@ -2,22 +2,22 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Menu, X, ChevronRight, ArrowRight } from "lucide-react";
+import { Menu, X, ArrowUpRight, ChevronRight, Award } from "lucide-react";
 import logo from "@/assets/images/logo.png";
-import Button from "@/components/ui/Button";
 
 interface NavLinkItem {
   label: string;
   href: string;
+  isActive?: boolean;
 }
 
 const navLinks: NavLinkItem[] = [
-  { label: "Home", href: "#" },
+  { label: "Home", href: "#", isActive: true },
   { label: "Sobre Nós", href: "#sobre" },
   { label: "Serviços", href: "#servicos" },
   { label: "Oradores", href: "#oradores" },
   { label: "Parceiros", href: "#parceiros" },
-  { label: "Contacte-nos", href: "#contacto" },
+  { label: "Contacto", href: "#contacto" },
 ];
 
 export default function Header() {
@@ -26,7 +26,7 @@ export default function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 25);
     };
 
     const handleResize = () => {
@@ -54,116 +54,123 @@ export default function Header() {
 
   return (
     <>
-      {/* ── Barra vermelha fixa no topo (assinatura de marca, sempre visível) ── */}
-      <div className="fixed top-0 left-0 w-full h-[3px] z-50 bg-primary" />
-
-      {/* ── Header Principal Fixo & Transparente ── */}
+      {/* ── Header Flutuante Editorial de Alta Precisão ── */}
       <header
-        className={`fixed top-[3px] left-0 w-full z-40 transition-all duration-300 ${isScrolled
-            ? "bg-background/95 backdrop-blur-md border-b border-border/60 py-3 shadow-premium"
-            : "bg-transparent py-5 lg:py-7 border-b border-transparent"
-          }`}
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 pointer-events-none ${
+          isScrolled
+            ? "py-2 sm:py-3 bg-white/95 backdrop-blur-md shadow-md border-b border-border/50"
+            : "py-3 sm:py-5 lg:py-6 bg-transparent"
+        }`}
       >
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-8">
-          {/* Logo */}
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between pointer-events-auto">
+          
+          {/* ── 1. Logo à Esquerda (Sempre White no Topo) ── */}
           <a
             href="#"
-            className="flex items-center transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-button"
-            aria-label="Ekanda Group Home"
+            className="flex items-center transition-transform duration-200 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-full"
+            aria-label="Inácios Certify — Página Inicial"
           >
             <Image
               src={logo}
               alt="Ekanda GROUP"
-              width={120}
-              height={44}
+              width={124}
+              height={42}
               priority
-              className={`w-auto object-contain transition-all duration-300 ${isScrolled ? "h-7 lg:h-8" : "h-8 lg:h-9"
-                }`}
+              className={`w-auto object-contain transition-all duration-300 ${
+                isScrolled
+                  ? "h-7 sm:h-8 brightness-100"
+                  : "h-7 sm:h-8 lg:h-9 brightness-0 invert"
+              }`}
             />
           </a>
 
-          {/* Desktop Navigation */}
+          {/* ── 2. Floating Capsule Pill Navigation (Centro) ── */}
           <nav
-            className="hidden lg:flex items-center space-x-8"
+            className="hidden lg:flex items-center bg-white shadow-[0_10px_35px_rgba(0,0,0,0.12)] border border-black/5 rounded-full px-4 py-1.5 transition-all duration-200"
             aria-label="Navegação principal"
           >
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="relative py-1.5 font-heading text-xs font-semibold uppercase tracking-wider text-foreground/85 hover:text-primary transition-colors duration-200 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-button px-1"
-              >
-                {link.label}
-                {/* Sublinhado duplo: vermelho + dourado, no estilo editorial do portfólio */}
-                <span className="absolute -bottom-0.5 left-0 flex w-0 group-hover:w-full transition-all duration-300 ease-out">
-                  <span className="h-0.5 w-full bg-primary rounded-full" />
-                </span>
-                <span className="absolute -bottom-[3px] left-0 w-0 h-0.5 group-hover:w-2/3 bg-gold rounded-full transition-all duration-500 ease-out delay-75" />
-              </a>
-            ))}
+            <ul className="flex items-center space-x-1 xl:space-x-2">
+              {navLinks.map((link) => (
+                <li key={link.label}>
+                  <a
+                    href={link.href}
+                    className={`inline-flex items-center font-heading text-xs font-semibold tracking-wide rounded-full px-3.5 py-1.5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                      link.isActive
+                        ? "bg-[#8B1800] text-white shadow-xs"
+                        : "text-[#3D3A37] hover:text-[#8B1800] hover:bg-neutral-100/80"
+                    }`}
+                  >
+                    <span>{link.label}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
           </nav>
 
-          {/* Desktop CTA Button */}
+          {/* ── 3. Botão Pill à Direita: "Emitir Certificado" ── */}
           <div className="hidden lg:flex items-center">
-            <Button href="#participar" variant="primary" size="sm">
-              Garantir Presença
-            </Button>
+            <a
+              href="#certificados"
+              className="inline-flex items-center gap-3 pl-5 pr-1.5 py-1.5 bg-white text-[#8B1800] hover:bg-neutral-50 font-heading font-bold text-xs tracking-wider uppercase rounded-full shadow-[0_8px_25px_rgba(0,0,0,0.18)] hover:shadow-[0_12px_30px_rgba(0,0,0,0.25)] transition-all duration-300 active:scale-95 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            >
+              <span>Emitir Certificado</span>
+              <div className="w-7 h-7 rounded-full bg-[#8B1800] text-white flex items-center justify-center shadow-xs transition-transform duration-300 group-hover:rotate-45">
+                <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
+              </div>
+            </a>
           </div>
 
-          {/* Mobile Hamburger Trigger */}
+          {/* ── Mobile Hamburger Trigger ── */}
           <button
             type="button"
             onClick={() => setIsOpen(true)}
             aria-expanded={isOpen}
             aria-controls="mobile-menu"
             aria-label="Abrir menu de navegação"
-            className="lg:hidden p-2 text-foreground hover:text-primary hover:bg-foreground/5 rounded-button focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors"
+            className={`lg:hidden p-2.5 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white shadow-sm ${
+              isScrolled
+                ? "bg-foreground/5 text-foreground hover:bg-foreground/10"
+                : "bg-white/90 text-[#8B1800] hover:bg-white"
+            }`}
           >
-            <Menu className="w-6 h-6" />
+            <Menu className="w-5 h-5" />
           </button>
         </div>
       </header>
 
-      {/* ── Overlay Semitransparente (Com blur e clique para fechar) ── */}
+      {/* ── Overlay Semitransparente Mobile ── */}
       <div
-        className={`lg:hidden fixed inset-0 z-40 bg-foreground/50 backdrop-blur-sm transition-opacity duration-300 ease-in-out ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-          }`}
+        className={`lg:hidden fixed inset-0 z-50 bg-foreground/60 backdrop-blur-sm transition-opacity duration-300 ${
+          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
         onClick={() => setIsOpen(false)}
         aria-hidden="true"
       />
 
-      {/* ── Menu Mobile ── */}
+      {/* ── Drawer Menu Mobile ── */}
       <div
         id="mobile-menu"
-        className={`lg:hidden fixed top-0 left-0 w-full z-50 bg-gradient-to-br from-primary via-primary to-[#6e0000] text-white rounded-b-card shadow-2xl transition-all duration-300 ease-out transform overflow-hidden ${isOpen
+        className={`lg:hidden fixed top-0 left-0 w-full z-50 bg-gradient-to-b from-[#8B1800] via-[#731300] to-[#590E00] text-white rounded-b-[28px] shadow-2xl transition-all duration-400 ease-out transform overflow-hidden ${
+          isOpen
             ? "translate-y-0 opacity-100 visible"
             : "-translate-y-full opacity-0 invisible pointer-events-none"
-          }`}
+        }`}
       >
-        {/* Textura decorativa sutil, ecoando as ondas do fundo do portfólio */}
-        <div
-          className="absolute inset-0 opacity-[0.07] pointer-events-none"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 20% 20%, white 0, transparent 40%), radial-gradient(circle at 85% 60%, white 0, transparent 35%)",
-          }}
-        />
-
-        <div className="relative px-6 py-5">
-          {/* Barra superior do menu mobile com Logo e Botão de Fechar */}
+        <div className="relative px-6 py-6">
+          {/* Top Mobile Bar */}
           <div className="flex items-center justify-between pb-4 border-b border-white/15">
             <a
               href="#"
               onClick={() => setIsOpen(false)}
-              className="flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-button"
+              className="flex items-center focus-visible:outline-none"
               aria-label="Ekanda Group Home"
             >
               <Image
                 src={logo}
                 alt="Ekanda GROUP"
-                width={120}
-                height={44}
-                className="h-8 w-auto object-contain brightness-0 invert"
+                width={110}
+                height={38}
+                className="h-7 w-auto object-contain brightness-0 invert"
               />
             </a>
 
@@ -171,55 +178,55 @@ export default function Header() {
               type="button"
               onClick={() => setIsOpen(false)}
               aria-label="Fechar menu"
-              className="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-button transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              className="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-full transition-colors"
             >
               <X className="w-6 h-6" />
             </button>
           </div>
 
-          {/* Etiqueta dourada, reforço de identidade do evento */}
-          <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.28em] text-gold">
-            Portfólio Comunique
-          </p>
+          {/* Tagline */}
+          <div className="mt-4 flex items-center gap-2">
+            <Award className="w-3.5 h-3.5 text-gold" />
+            <p className="text-[10px] font-heading font-bold uppercase tracking-[0.24em] text-gold">
+              Inácios Certify · Portfólio Comunique
+            </p>
+          </div>
 
-          {/* Links de navegação mobile */}
-          <ul className="flex flex-col space-y-1 my-4">
+          {/* Links */}
+          <ul className="flex flex-col space-y-1.5 my-5">
             {navLinks.map((link, i) => (
-              <li
-                key={link.label}
-                className="border-b border-white/10 last:border-none"
-              >
+              <li key={link.label} className="border-b border-white/10 last:border-none">
                 <a
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center justify-between py-3.5 px-1 rounded-button font-heading text-sm font-semibold uppercase tracking-wider text-white/90 hover:text-white hover:pl-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                  className="flex items-center justify-between py-3 px-2 rounded-xl font-heading text-xs sm:text-sm font-semibold uppercase tracking-wider text-white/90 hover:text-white hover:bg-white/10 transition-all"
                 >
                   <span className="flex items-center gap-3">
-                    <span className="text-[10px] text-white/50 font-normal tracking-normal">
+                    <span className="font-heading text-[10px] text-white/40 font-bold">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     {link.label}
                   </span>
-                  <ChevronRight className="w-4 h-4 text-white/60" />
+                  <ChevronRight className="w-4 h-4 text-white/50" />
                 </a>
               </li>
             ))}
           </ul>
 
-          {/* Botão de ação mobile */}
-          <div className="pt-3 border-t border-white/15">
-            <Button
-              href="#participar"
-              variant="white"
-              size="md"
-              fullWidth
-              rightIcon={<ArrowRight className="w-4 h-4" />}
+          {/* Action Mobile */}
+          <div className="pt-2 border-t border-white/15">
+            <a
+              href="#certificados"
               onClick={() => setIsOpen(false)}
+              className="w-full flex items-center justify-center gap-3 py-3.5 bg-white text-[#8B1800] font-heading font-bold text-xs uppercase tracking-wider rounded-full shadow-lg transition-transform active:scale-95"
             >
-              Garantir Presença
-            </Button>
-            <p className="text-center text-[11px] text-white/60 mt-3">
-              Vagas limitadas · Evento exclusivo
+              <span>Emitir Certificado</span>
+              <div className="w-5 h-5 rounded-full bg-[#8B1800] text-white flex items-center justify-center">
+                <ArrowUpRight className="w-3 h-3 stroke-[2.5]" />
+              </div>
+            </a>
+            <p className="text-center text-[10.5px] font-sans text-white/60 mt-3">
+              Validação instantânea e oficial de certificados
             </p>
           </div>
         </div>

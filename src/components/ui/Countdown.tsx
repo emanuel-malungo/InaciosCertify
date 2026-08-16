@@ -10,7 +10,7 @@ interface TimeLeft {
 }
 
 function calcTimeLeft(): TimeLeft {
-  // 8 de Setembro de 2026 — 00:00:00
+  // 8 de Setembro de 2026 — 00:00:00 (Evento Oficial)
   const target = new Date("2026-09-08T00:00:00").getTime();
   const diff = target - Date.now();
 
@@ -24,7 +24,11 @@ function calcTimeLeft(): TimeLeft {
   };
 }
 
-export default function Countdown() {
+interface CountdownProps {
+  variant?: "dark" | "light";
+}
+
+export default function Countdown({ variant = "dark" }: CountdownProps) {
   const [time, setTime] = useState<TimeLeft>(calcTimeLeft());
 
   useEffect(() => {
@@ -33,43 +37,32 @@ export default function Countdown() {
   }, []);
 
   const units = [
-    { label: "DIAS", value: time.dias },
-    { label: "HORAS", value: time.horas },
-    { label: "MIN", value: time.minutos },
-    { label: "SEG", value: time.segundos },
+    { label: "Dias", value: time.dias },
+    { label: "Horas", value: time.horas },
+    { label: "Min", value: time.minutos },
+    { label: "Seg", value: time.segundos },
   ];
 
+  const isDark = variant === "dark";
+
   return (
-    <div className="flex items-end gap-2.5 sm:gap-3.5">
-      {units.map(({ label, value }, i) => (
-        <div key={label} className="flex items-end gap-2.5 sm:gap-3.5">
-          <div className="flex flex-col items-center">
-            <span
-              className="font-black text-primary tabular-nums leading-none tracking-tight"
-              style={{
-                fontFamily: "var(--font-montserrat)",
-                fontSize: "clamp(1.75rem, 3.2vw, 2.5rem)",
-              }}
-            >
-              {String(value).padStart(2, "0")}
-            </span>
-            <span
-              className="text-[10px] uppercase font-semibold tracking-[0.18em] text-text-muted mt-1.5"
-              style={{ fontFamily: "var(--font-inter)" }}
-            >
-              {label}
-            </span>
-          </div>
-          {i < units.length - 1 && (
-            <span
-              className="text-gold font-black mb-4 sm:mb-5 leading-none text-base sm:text-xl select-none"
-              style={{
-                fontFamily: "var(--font-montserrat)",
-              }}
-            >
-              :
-            </span>
-          )}
+    <div className="flex items-center gap-4 sm:gap-6 lg:gap-8">
+      {units.map(({ label, value }) => (
+        <div key={label} className="flex flex-col items-start">
+          <span
+            className={`font-heading font-black tabular-nums leading-none tracking-tight text-2xl sm:text-3xl lg:text-4xl ${
+              isDark ? "text-[#8B1800]" : "text-white"
+            }`}
+          >
+            {String(value).padStart(2, "0")}
+          </span>
+          <span
+            className={`font-sans text-[10px] sm:text-[11px] font-bold uppercase tracking-wider mt-1 ${
+              isDark ? "text-[#746F6A]" : "text-white/70"
+            }`}
+          >
+            {label}
+          </span>
         </div>
       ))}
     </div>
