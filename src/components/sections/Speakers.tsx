@@ -187,7 +187,7 @@ export default function SpeakersSection() {
                     </div>
 
                     {/* Placa Vermelha com Nome e Cargo */}
-                    <div className="bg-gradient-to-b from-[#941800] to-[#7B1200] text-white py-2.5 px-2 text-center flex flex-col justify-center items-center min-h-[54px] sm:min-h-[58px]">
+                    <div className="bg-gradient-to-b from-[#941800] to-[#7B1200] text-white py-2.5 px-2 text-center flex flex-col justify-center items-center min-h-[54px] sm:min-h-[58px] flex-1">
                       <h4 className="font-heading font-black text-xs sm:text-[12.5px] leading-tight mb-0.5 text-white">
                         {speaker.name}
                       </h4>
@@ -218,7 +218,7 @@ export default function SpeakersSection() {
                     </div>
 
                     {/* Placa Vermelha com Nome e Cargo */}
-                    <div className="bg-gradient-to-b from-[#941800] to-[#7B1200] text-white py-2.5 px-2 text-center flex flex-col justify-center items-center min-h-[54px] sm:min-h-[58px]">
+                    <div className="bg-gradient-to-b from-[#941800] to-[#7B1200] text-white py-2.5 px-2 text-center flex flex-col justify-center items-center min-h-[54px] sm:min-h-[58px] flex-1">
                       <h4 className="font-heading font-black text-xs sm:text-[12.5px] leading-tight mb-0.5 text-white">
                         {speaker.name}
                       </h4>
