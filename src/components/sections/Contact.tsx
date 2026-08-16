@@ -68,7 +68,7 @@ export default function ContactSection() {
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none -z-0" />
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-gold/10 rounded-full blur-3xl pointer-events-none -z-0" />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl  mx-auto px-6 lg:px-8 relative z-10">
         
         {/* ── Cabeçalho da Seção ── */}
         <div className="text-center max-w-3xl mx-auto mb-16 lg:mb-20">

@@ -138,9 +138,9 @@ export default function CertificateSection() {
   return (
     <section id="emitir" className="relative py-20 lg:py-28 bg-white border-t border-border overflow-hidden scroll-mt-16">
       {/* Background Decorativo sutil */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full bg-[radial-gradient(#E8E1DA_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl  h-full bg-[radial-gradient(#E8E1DA_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl  mx-auto px-6 lg:px-8 relative z-10">
         
         {/* ── Cabeçalho da Seção ── */}
         <div className="text-center max-w-3xl mx-auto mb-14 lg:mb-16">

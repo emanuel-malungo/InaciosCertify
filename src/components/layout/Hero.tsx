@@ -50,7 +50,7 @@ export default function Hero() {
       </div>
 
       {/* ── Conteúdo Principal Superior / Central ── */}
-      <div className="relative z-20 w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex flex-col justify-center pt-20 sm:pt-24 lg:pt-28 pb-4 pointer-events-none">
+      <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex flex-col justify-center pt-20 sm:pt-24 lg:pt-28 pb-4 pointer-events-none">
         
         {/* Bloco de Mensagem Editorial */}
         <div className="flex flex-col items-start max-w-2xl lg:max-w-xl xl:max-w-2xl pointer-events-auto mt-auto mb-auto">
@@ -96,8 +96,8 @@ export default function Hero() {
 
       {/* ── Bloco Inferior: Fundo White, Rounded Superior, Largura Expandida & Logos Oficiais ── */}
       <div className="relative z-30 w-full pointer-events-auto">
-        <div className="max-w-7xl mx-auto bg-white text-[#252321] rounded-t-3xl shadow-[0_-15px_45px_rgba(0,0,0,0.18)] border-t border-black/5 px-6 sm:px-10 lg:px-14 py-4 sm:py-5">
-          <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4 lg:gap-8">
+        <div className="max-w-7xl  mx-auto bg-white text-[#252321] rounded-t-3xl shadow-[0_-15px_45px_rgba(0,0,0,0.18)] border-t border-black/5 px-6 sm:px-10 lg:px-14 py-4 sm:py-5">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4 lg:gap-8">
             
             {/* 1. Contagem Regressiva em Fundo Branco */}
             <div className="flex flex-col items-start gap-1">

@@ -106,7 +106,7 @@ export default function AboutSection() {
       <div className="absolute top-10 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 left-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl  mx-auto px-6 lg:px-8 relative z-10">
 
         {/* ── BLOCO 1: ENQUADRAMENTO E CONCEITO (Layout Fiel ao Design de Referência) ── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-stretch mb-24 lg:mb-32">

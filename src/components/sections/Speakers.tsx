@@ -82,7 +82,7 @@ export default function SpeakersSection() {
         />
       </div>
 
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* ── Título Principal ── */}
         <div className="text-center mb-12 lg:mb-16">

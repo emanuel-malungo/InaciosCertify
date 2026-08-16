@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Menu, X, ArrowUpRight, ChevronRight, Award } from "lucide-react";
 import logo from "@/assets/images/logo.png";
+import { useState, useEffect } from "react";
+import { Menu, X, ArrowUpRight, ChevronRight, Award } from "lucide-react";
 
 interface NavLinkItem {
   label: string;
@@ -62,7 +62,7 @@ export default function Header() {
             : "py-3 sm:py-5 lg:py-6 bg-transparent"
         }`}
       >
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between pointer-events-auto">
+        <div className="max-w-7xl  mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between pointer-events-auto">
           
           {/* ── 1. Logo à Esquerda (Sempre White no Topo) ── */}
           <a
