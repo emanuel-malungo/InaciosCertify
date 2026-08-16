@@ -54,17 +54,17 @@ export default function Header() {
 
   return (
     <>
-      {/* ── Header Flutuante Editorial de Alta Precisão ── */}
+      {/* ── Header Flutuante Editorial com Glassmorphism em Top-0 ── */}
       <header
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 pointer-events-none ${
           isScrolled
-            ? "py-2 sm:py-3 bg-white/95 backdrop-blur-md shadow-md border-b border-border/50"
-            : "py-3 sm:py-5 lg:py-6 bg-transparent"
+            ? "py-2 sm:py-3 bg-white/95 backdrop-blur-md shadow-md border-b border-border/60"
+            : "py-3 sm:py-4 bg-primary-dark/60 backdrop-blur-md shadow-sm border-b border-white/10"
         }`}
       >
-        <div className="max-w-7xl  mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between pointer-events-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between pointer-events-auto">
           
-          {/* ── 1. Logo à Esquerda (Sempre White no Topo) ── */}
+          {/* ── 1. Logo à Esquerda ── */}
           <a
             href="#"
             className="flex items-center transition-transform duration-200 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-full"
@@ -73,20 +73,24 @@ export default function Header() {
             <Image
               src={logo}
               alt="Ekanda GROUP"
-              width={124}
-              height={42}
+              width={220}
+              height={70}
               priority
               className={`w-auto object-contain transition-all duration-300 ${
                 isScrolled
-                  ? "h-7 sm:h-8 brightness-100"
-                  : "h-7 sm:h-8 lg:h-9 brightness-0 invert"
+                  ? "h-9 sm:h-10 lg:h-11 brightness-100"
+                  : "h-11 sm:h-12 md:h-13 lg:h-14 brightness-0 invert drop-shadow-md"
               }`}
             />
           </a>
 
           {/* ── 2. Floating Capsule Pill Navigation (Centro) ── */}
           <nav
-            className="hidden lg:flex items-center bg-white shadow-[0_10px_35px_rgba(0,0,0,0.12)] border border-black/5 rounded-full px-4 py-1.5 transition-all duration-200"
+            className={`hidden lg:flex items-center rounded-full px-4 py-1.5 transition-all duration-200 ${
+              isScrolled
+                ? "bg-background-soft border border-border shadow-sm"
+                : "bg-white/10 backdrop-blur-md border border-white/20 shadow-md"
+            }`}
             aria-label="Navegação principal"
           >
             <ul className="flex items-center space-x-1 xl:space-x-2">
@@ -96,8 +100,12 @@ export default function Header() {
                     href={link.href}
                     className={`inline-flex items-center font-heading text-xs font-semibold tracking-wide rounded-full px-3.5 py-1.5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                       link.isActive
-                        ? "bg-[#8B1800] text-white shadow-xs"
-                        : "text-[#3D3A37] hover:text-[#8B1800] hover:bg-neutral-100/80"
+                        ? isScrolled
+                          ? "bg-primary text-white shadow-xs"
+                          : "bg-white text-primary shadow-xs"
+                        : isScrolled
+                        ? "text-text-muted hover:text-primary hover:bg-neutral-200/60"
+                        : "text-white/90 hover:text-white hover:bg-white/15"
                     }`}
                   >
                     <span>{link.label}</span>
@@ -111,11 +119,19 @@ export default function Header() {
           <div className="hidden lg:flex items-center">
             <a
               href="#certificados"
-              className="inline-flex items-center gap-3 pl-5 pr-1.5 py-1.5 bg-white text-[#8B1800] hover:bg-neutral-50 font-heading font-bold text-xs tracking-wider uppercase rounded-full shadow-[0_8px_25px_rgba(0,0,0,0.18)] hover:shadow-[0_12px_30px_rgba(0,0,0,0.25)] transition-all duration-300 active:scale-95 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              className={`inline-flex items-center gap-3 pl-5 pr-1.5 py-1.5 font-heading font-bold text-xs tracking-wider uppercase rounded-full shadow-md hover:shadow-lg transition-all duration-300 active:scale-95 group focus-visible:outline-none focus-visible:ring-2 ${
+                isScrolled
+                  ? "bg-primary text-white hover:bg-primary-hover focus-visible:ring-primary"
+                  : "bg-white text-primary hover:bg-neutral-100 focus-visible:ring-white"
+              }`}
             >
               <span>Emitir Certificado</span>
-              <div className="w-7 h-7 rounded-full bg-[#8B1800] text-white flex items-center justify-center shadow-xs transition-transform duration-300 group-hover:rotate-45">
-                <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
+              <div
+                className={`w-7 h-7 rounded-full flex items-center justify-center shadow-xs transition-transform duration-300 group-hover:rotate-45 ${
+                  isScrolled ? "bg-white text-primary" : "bg-primary text-white"
+                }`}
+              >
+                <ArrowUpRight className="w-4 h-4 stroke-2" />
               </div>
             </a>
           </div>
@@ -127,10 +143,10 @@ export default function Header() {
             aria-expanded={isOpen}
             aria-controls="mobile-menu"
             aria-label="Abrir menu de navegação"
-            className={`lg:hidden p-2.5 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white shadow-sm ${
+            className={`lg:hidden p-2.5 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 shadow-sm ${
               isScrolled
-                ? "bg-foreground/5 text-foreground hover:bg-foreground/10"
-                : "bg-white/90 text-[#8B1800] hover:bg-white"
+                ? "bg-foreground/5 text-foreground hover:bg-foreground/10 border border-border/40 focus-visible:ring-primary"
+                : "bg-white/15 text-white hover:bg-white/25 border border-white/20 focus-visible:ring-white"
             }`}
           >
             <Menu className="w-5 h-5" />
@@ -150,7 +166,7 @@ export default function Header() {
       {/* ── Drawer Menu Mobile ── */}
       <div
         id="mobile-menu"
-        className={`lg:hidden fixed top-0 left-0 w-full z-50 bg-gradient-to-b from-[#8B1800] via-[#731300] to-[#590E00] text-white rounded-b-[28px] shadow-2xl transition-all duration-400 ease-out transform overflow-hidden ${
+        className={`lg:hidden fixed top-0 left-0 w-full z-50 bg-gradient-to-b from-primary via-primary-hover to-primary-dark text-white rounded-b-3xl shadow-2xl transition-all duration-300 ease-out transform overflow-hidden ${
           isOpen
             ? "translate-y-0 opacity-100 visible"
             : "-translate-y-full opacity-0 invisible pointer-events-none"
@@ -168,9 +184,9 @@ export default function Header() {
               <Image
                 src={logo}
                 alt="Ekanda GROUP"
-                width={110}
-                height={38}
-                className="h-7 w-auto object-contain brightness-0 invert"
+                width={170}
+                height={55}
+                className="h-10 w-auto object-contain brightness-0 invert drop-shadow-sm"
               />
             </a>
 
@@ -186,14 +202,14 @@ export default function Header() {
 
           {/* Tagline */}
           <div className="mt-4 flex items-center gap-2">
-            <Award className="w-3.5 h-3.5 text-gold" />
-            <p className="text-[10px] font-heading font-bold uppercase tracking-[0.24em] text-gold">
+            <Award className="w-4 h-4 text-gold" />
+            <p className="text-xs font-heading font-bold uppercase tracking-widest text-gold">
               Inácios Certify · Portfólio Comunique
             </p>
           </div>
 
           {/* Links */}
-          <ul className="flex flex-col space-y-1.5 my-5">
+          <ul className="flex flex-col space-y-1 my-5">
             {navLinks.map((link, i) => (
               <li key={link.label} className="border-b border-white/10 last:border-none">
                 <a
@@ -202,7 +218,7 @@ export default function Header() {
                   className="flex items-center justify-between py-3 px-2 rounded-xl font-heading text-xs sm:text-sm font-semibold uppercase tracking-wider text-white/90 hover:text-white hover:bg-white/10 transition-all"
                 >
                   <span className="flex items-center gap-3">
-                    <span className="font-heading text-[10px] text-white/40 font-bold">
+                    <span className="font-heading text-xs text-white/40 font-bold">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     {link.label}
@@ -218,14 +234,14 @@ export default function Header() {
             <a
               href="#certificados"
               onClick={() => setIsOpen(false)}
-              className="w-full flex items-center justify-center gap-3 py-3.5 bg-white text-[#8B1800] font-heading font-bold text-xs uppercase tracking-wider rounded-full shadow-lg transition-transform active:scale-95"
+              className="w-full flex items-center justify-center gap-3 py-3.5 bg-white text-primary font-heading font-bold text-xs uppercase tracking-wider rounded-full shadow-lg transition-transform active:scale-95"
             >
               <span>Emitir Certificado</span>
-              <div className="w-5 h-5 rounded-full bg-[#8B1800] text-white flex items-center justify-center">
-                <ArrowUpRight className="w-3 h-3 stroke-[2.5]" />
+              <div className="w-5 h-5 rounded-full bg-primary text-white flex items-center justify-center">
+                <ArrowUpRight className="w-3.5 h-3.5 stroke-2" />
               </div>
             </a>
-            <p className="text-center text-[10.5px] font-sans text-white/60 mt-3">
+            <p className="text-center text-xs font-sans text-white/70 mt-3">
               Validação instantânea e oficial de certificados
             </p>
           </div>

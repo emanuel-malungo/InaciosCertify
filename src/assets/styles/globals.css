@@ -4,10 +4,12 @@
   --background: #FFFFFF;
   --foreground: #252321;
   
-  --primary: #A62400;
-  --primary-hover: #8E2000;
+  --primary: #8B1800;
+  --primary-hover: #731300;
+  --primary-dark: #4D0800;
   --accent: #DA2F01;
   --gold: #B38A5A;
+  --gold-light: #D4AF37;
   
   --background-soft: #FAF8F5;
   --surface-warm: #F3EEE7;
@@ -33,8 +35,10 @@
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
+  --color-primary-dark: var(--primary-dark);
   --color-accent: var(--accent);
   --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
   --color-background-soft: var(--background-soft);
   --color-surface-warm: var(--surface-warm);
   --color-text: var(--text);

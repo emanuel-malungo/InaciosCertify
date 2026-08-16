@@ -51,14 +51,14 @@ export default function Countdown({ variant = "dark" }: CountdownProps) {
         <div key={label} className="flex flex-col items-start">
           <span
             className={`font-heading font-black tabular-nums leading-none tracking-tight text-2xl sm:text-3xl lg:text-4xl ${
-              isDark ? "text-[#8B1800]" : "text-white"
+              isDark ? "text-primary" : "text-white"
             }`}
           >
             {String(value).padStart(2, "0")}
           </span>
           <span
-            className={`font-sans text-[10px] sm:text-[11px] font-bold uppercase tracking-wider mt-1 ${
-              isDark ? "text-[#746F6A]" : "text-white/70"
+            className={`font-sans text-xs font-bold uppercase tracking-wider mt-1 ${
+              isDark ? "text-text-muted" : "text-white/70"
             }`}
           >
             {label}
