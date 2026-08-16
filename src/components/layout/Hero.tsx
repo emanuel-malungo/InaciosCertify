@@ -5,7 +5,7 @@ import iconTvZimbo from "@/assets/images/iconTvZimbo.png";
 import iconPlatina from "@/assets/images/iconPlatinaline.png";
 import iconSap from "@/assets/images/iconSap.png";
 import Countdown from "@/components/ui/Countdown";
-import { ArrowRight, Sparkles, Calendar, MapPin, Award, CheckCircle2, ShieldCheck } from "lucide-react";
+import { ArrowRight, Sparkles, Calendar, MapPin, CheckCircle2, ShieldCheck } from "lucide-react";
 
 export default function Hero() {
   return (
@@ -54,14 +54,13 @@ export default function Hero() {
           
           {/* Coluna de Texto & Ações */}
           <div className="lg:col-span-7 xl:col-span-7 flex flex-col items-start pointer-events-auto">
-            
-       
+        
 
-            {/* 2. Manchete Principal com Tipografia Monumental */}
-            <h1 className="font-heading font-black text-white text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl leading-none tracking-tight uppercase mb-3 sm:mb-4 drop-shadow-sm">
-              PORTFÓLIO
+            {/* 2. Manchete Principal com Tipografia Monumental em Playwrite DE SAS */}
+            <h1 className="font-script text-white text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl leading-tight tracking-normal mb-3 sm:mb-4 drop-shadow-md">
+              Portfólio
               <br />
-              <span className="text-white">COMUNIQUE</span>
+              <span className="text-white">Comunique</span>
             </h1>
 
             {/* 3. Subtítulo / Slogan de Alto Impacto */}

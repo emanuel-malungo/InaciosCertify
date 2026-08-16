@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+DE+SAS:wght@100..400&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -50,6 +51,7 @@
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui;
   --font-heading: var(--font-montserrat), ui-sans-serif, system-ui;
+  --font-script: 'Playwrite DE SAS', cursive, sans-serif;
 
   --radius-card: var(--radius-card);
   --radius-button: var(--radius-button);
