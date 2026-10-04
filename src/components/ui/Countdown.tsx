@@ -9,9 +9,10 @@ interface TimeLeft {
   segundos: number;
 }
 
-function calcTimeLeft(): TimeLeft {
-  // 8 de Setembro de 2026 — 00:00:00 (Evento Oficial)
-  const target = new Date("2026-09-08T00:00:00").getTime();
+function calcTimeLeft(targetDateStr?: string): TimeLeft {
+  // 8 de Outubro de 2026 — 00:00:00 (Dia do Evento)
+  const targetDate = targetDateStr ? new Date(targetDateStr) : new Date("2026-10-08T00:00:00");
+  const target = targetDate.getTime();
   const diff = target - Date.now();
 
   if (diff <= 0) return { dias: 0, horas: 0, minutos: 0, segundos: 0 };
@@ -26,15 +27,17 @@ function calcTimeLeft(): TimeLeft {
 
 interface CountdownProps {
   variant?: "dark" | "light";
+  targetDate?: string;
 }
 
-export default function Countdown({ variant = "dark" }: CountdownProps) {
-  const [time, setTime] = useState<TimeLeft>(calcTimeLeft());
+export default function Countdown({ variant = "dark", targetDate = "2026-10-08T00:00:00" }: CountdownProps) {
+  const [time, setTime] = useState<TimeLeft>(calcTimeLeft(targetDate));
 
   useEffect(() => {
-    const id = setInterval(() => setTime(calcTimeLeft()), 1000);
+    setTime(calcTimeLeft(targetDate));
+    const id = setInterval(() => setTime(calcTimeLeft(targetDate)), 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [targetDate]);
 
   const units = [
     { label: "Dias", value: time.dias },
