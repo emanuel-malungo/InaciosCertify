@@ -118,7 +118,7 @@ export default function Header() {
           {/* ── 3. Botão Pill à Direita: "Emitir Certificado" ── */}
           <div className="hidden lg:flex items-center">
             <a
-              href="#certificados"
+              href="/certificado"
               className={`inline-flex items-center gap-3 pl-5 pr-1.5 py-1.5 font-heading font-bold text-xs tracking-wider uppercase rounded-full shadow-md hover:shadow-lg transition-all duration-300 active:scale-95 group focus-visible:outline-none focus-visible:ring-2 ${
                 isScrolled
                   ? "bg-primary text-white hover:bg-primary-hover focus-visible:ring-primary"
@@ -232,7 +232,7 @@ export default function Header() {
           {/* Action Mobile */}
           <div className="pt-2 border-t border-white/15">
             <a
-              href="#certificados"
+              href="/certificado"
               onClick={() => setIsOpen(false)}
               className="w-full flex items-center justify-center gap-3 py-3.5 bg-white text-primary font-heading font-bold text-xs uppercase tracking-wider rounded-full shadow-lg transition-transform active:scale-95"
             >
