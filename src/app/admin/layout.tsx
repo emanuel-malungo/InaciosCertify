@@ -76,7 +76,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const title = PAGE_TITLES[pathname] || "Painel de Administração";
 
   return (
-    <div className="min-h-screen bg-primary-dark p-2 sm:p-4 md:p-5 lg:p-6 flex flex-col lg:flex-row gap-4 font-sans text-text antialiased pb-16 lg:pb-0">
+    <div className="h-screen w-screen overflow-hidden bg-primary-dark p-2 sm:p-4 md:p-5 lg:p-6 flex flex-col lg:flex-row gap-4 font-sans text-text antialiased">
       {/* Sidebar Persistente do Shell Escuro */}
       <AdminSidebar
         isOpen={mobileSidebarOpen}
@@ -84,7 +84,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       />
 
       {/* Main Content Surface (Superfície Branca Arredondada Chudobank) */}
-      <div className="flex-1 bg-white rounded-[24px] sm:rounded-[36px] lg:rounded-[44px] shadow-2xl overflow-hidden flex flex-col min-w-0 border border-white/20">
+      <div className="flex-1 h-full min-h-0 bg-white rounded-[24px] sm:rounded-[36px] lg:rounded-[44px] shadow-2xl overflow-hidden flex flex-col min-w-0 border border-white/20">
         <AdminHeader
           onOpenMobileSidebar={() => setMobileSidebarOpen(true)}
           title={title}
@@ -92,7 +92,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           checkinMode={eventData?.event?.checkinMode}
         />
 
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto bg-background-soft/40 pb-20 lg:pb-8">
+        {/* Único Contentor com Scroll (children) */}
+        <main className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-background-soft/40 pb-20 lg:pb-8">
           {children}
         </main>
       </div>

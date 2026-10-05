@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
+import logo from "@/assets/images/logo.png";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -8,7 +10,6 @@ import {
   Camera,
   Calendar,
   History,
-  Shield,
   X,
   ChevronRight,
 } from "lucide-react";
@@ -47,21 +48,18 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
         } py-4 lg:py-2 px-3 flex flex-col justify-between`}
       >
         <div className="space-y-6">
-          {/* Brand Header */}
-          <div className="px-4 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-gold border border-white/15 shadow-inner">
-                <Shield size={20} className="text-gold" />
-              </div>
-              <div>
-                <span className="font-heading font-black text-sm tracking-tight text-white block leading-none">
-                  Inácios Certify
-                </span>
-                <span className="text-[10px] text-gold/80 font-sans tracking-widest uppercase font-semibold">
-                  Painel Admin
-                </span>
-              </div>
-            </div>
+          {/* Brand Header — Apenas a Logo Ekanda em Branco */}
+          <div className="px-4 py-4 flex items-center justify-between border-b border-white/10">
+            <Link href="/admin" onClick={onClose} className="block">
+              <Image
+                src={logo}
+                alt="Ekanda GROUP"
+                width={180}
+                height={55}
+                priority
+                className="h-20 w-auto object-contain brightness-0 invert drop-shadow-sm"
+              />
+            </Link>
 
             <button
               onClick={onClose}

@@ -33,7 +33,7 @@ export default function AdminHeader({
   }
 
   return (
-    <header className="h-16 sm:h-20 bg-white/90 backdrop-blur-md border-b border-border/60 px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30 shrink-0">
+    <header className="h-16 sm:h-20 bg-white/95 backdrop-blur-md border-b border-border/60 px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30 shrink-0 shadow-xs">
       <div className="flex items-center gap-3">
         <button
           onClick={onOpenMobileSidebar}
