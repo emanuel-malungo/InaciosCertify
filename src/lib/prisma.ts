@@ -2,32 +2,34 @@ import { PrismaClient } from "@/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
-  pool: Pool | undefined;
-};
+type Globals = typeof globalThis & { __prisma?: PrismaClient; __pgPool?: Pool };
+const g = globalThis as Globals;
 
-const connectionString = process.env.DATABASE_URL;
+function createClient(): PrismaClient {
+  const connectionString = process.env.DATABASE_URL;
+  if (!connectionString) {
+    throw new Error("DATABASE_URL não está definido (ver .env.example).");
+  }
 
-const pool =
-  globalForPrisma.pool ??
-  new Pool({
-    connectionString,
+  // Pool pequeno: o Neon já faz pooling (PgBouncer) do lado do servidor.
+  g.__pgPool ??= new Pool({ connectionString, max: 5 });
+  return new PrismaClient({
+    adapter: new PrismaPg(g.__pgPool),
+    log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
   });
-
-const adapter = new PrismaPg(pool);
-
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    adapter,
-    log: process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
-  });
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-  globalForPrisma.pool = pool;
 }
 
-export default prisma;
-export * from "@/generated/prisma/client";
+/** Singleton — sobrevive ao hot-reload do `next dev`. */
+export const prisma = (g.__prisma ??= createClient());
+
+export { Prisma } from "@/generated/prisma/client";
+export type {
+  Event,
+  Ticket,
+  Certificate,
+  AdminUser,
+  AuditLog,
+  CheckinMode,
+  TicketStatus,
+  CertificateStatus,
+} from "@/generated/prisma/client";

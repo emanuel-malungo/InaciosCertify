@@ -1,16 +1,23 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
 }
 
 datasource db {
   provider = "postgresql"
 }
 
+/// AUTO = abre/fecha pela janela do dia do evento; OPEN/CLOSED = override manual do admin.
+enum CheckinMode {
+  AUTO
+  OPEN
+  CLOSED
+}
+
 enum TicketStatus {
   ACTIVE
   CLAIMED
-  EXPIRED
   INVALIDATED
 }
 
@@ -19,75 +26,77 @@ enum CertificateStatus {
   REVOKED
 }
 
-enum AdminRole {
-  SUPER_ADMIN
-  EVENT_MANAGER
-}
-
 model Event {
-  id               String        @id @default(uuid())
-  slug             String        @unique
-  name             String
-  description      String?
-  eventDate        DateTime
-  activeForCheckin Boolean       @default(false)
-  
-  tickets          Ticket[]
-  certificates     Certificate[]
+  id              String      @id @default(uuid())
+  slug            String      @unique
+  name            String
+  description     String?
+  timezone        String      @default("Africa/Luanda")
+  startsAt        DateTime
+  checkinOpensAt  DateTime
+  checkinClosesAt DateTime
+  checkinMode     CheckinMode @default(AUTO)
 
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  tickets      Ticket[]
+  certificates Certificate[]
 
-  @@index([slug])
-  @@index([eventDate])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
+/// Ingresso (QR Code) de um participante — ligado a um dispositivo, sem login.
 model Ticket {
-  id                String       @id @default(uuid())
-  code              String       @unique // Código legível amigável (ex: IC-TKT-8X92)
-  token             String       @unique // Hash/Token assinado seguro embutido no QR Code
-  deviceFingerprint String?      // Identificador de sessão/dispositivo para vínculo único
-  status            TicketStatus @default(ACTIVE)
-  
-  eventId           String
-  event             Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  id          String       @id @default(uuid())
+  eventId     String
+  event       Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  /// HMAC do token de dispositivo. null = ainda não vinculado (ex.: QR regenerado pelo admin).
+  deviceHash  String?
+  /// Incrementa quando o admin regenera o QR; invalida o QR anterior.
+  qrVersion   Int          @default(1)
+  status      TicketStatus @default(ACTIVE)
+  userAgent   String?
+  ipHash      String?
+  claimedAt   DateTime?
+  invalidatedAt     DateTime?
+  invalidatedReason String?
 
-  certificate       Certificate?
+  certificate Certificate?
 
-  claimedAt         DateTime?
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@index([token])
-  @@index([code])
-  @@index([eventId])
-  @@index([deviceFingerprint])
+  /// Um dispositivo só pode ter um ingresso por evento (NULLs não colidem em Postgres).
+  @@unique([eventId, deviceHash])
+  @@index([status])
+  @@index([createdAt])
 }
 
 model Certificate {
   id               String            @id @default(uuid())
-  validationCode   String            @unique // Código público legível (ex: CERT-2026-9F8A1B)
-  verificationHash String            @unique // Hash SHA256 criptográfico para QR Code de validação
+  serial           Int               @unique @default(autoincrement())
+  /// Código público e não enumerável usado em /validar/<código>.
+  verificationCode String            @unique
   fullName         String
   status           CertificateStatus @default(VALID)
-  
-  ticketId         String            @unique
-  ticket           Ticket            @relation(fields: [ticketId], references: [id], onDelete: Restrict)
+  revokedAt        DateTime?
+  revokedReason    String?
+  /// Incrementa em cada regeneração feita pelo admin.
+  version          Int               @default(1)
+  /// SHA-256 do conteúdo canónico (código|nome|evento|emissão).
+  contentHash      String
 
-  eventId          String
-  event            Event             @relation(fields: [eventId], references: [id], onDelete: Restrict)
+  ticketId String @unique
+  ticket   Ticket @relation(fields: [ticketId], references: [id], onDelete: Restrict)
+  eventId  String
+  event    Event  @relation(fields: [eventId], references: [id], onDelete: Restrict)
 
-  pdfUrl           String?
-  metadata         Json?             // Metadados adicionais (IP, User-Agent, etc.)
-  
-  issuedAt         DateTime          @default(now())
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
+  issuedAt  DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@index([validationCode])
-  @@index([verificationHash])
-  @@index([eventId])
+  @@index([eventId, status])
   @@index([fullName])
+  @@index([issuedAt])
 }
 
 model AdminUser {
@@ -95,22 +104,21 @@ model AdminUser {
   email        String    @unique
   name         String
   passwordHash String
-  role         AdminRole @default(EVENT_MANAGER)
-  apiKey       String?   @unique
-  
+  lastLoginAt  DateTime?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 }
 
 model AuditLog {
   id        String   @id @default(uuid())
-  action    String   // EX: "TICKET_INVALIDATED", "CERTIFICATE_REGENERATED", "EVENT_STATUS_CHANGED"
-  entity    String   // "Ticket", "Certificate", "Event"
+  actor     String   // e-mail do admin, "participant" ou "system"
+  action    String   // ex.: TICKET_CREATED, CERTIFICATE_ISSUED, CERTIFICATE_REVOKED
+  entity    String   // "Ticket" | "Certificate" | "Event"
   entityId  String
   details   Json?
-  ipAddress String?
+  ipHash    String?
   createdAt DateTime @default(now())
 
-  @@index([action])
-  @@index([entityId])
+  @@index([entity, entityId])
+  @@index([createdAt])
 }
