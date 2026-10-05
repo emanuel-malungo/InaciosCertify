@@ -48,29 +48,30 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
         } py-4 lg:py-2 px-3 flex flex-col justify-between`}
       >
         <div className="space-y-6">
-          {/* Brand Header — Apenas a Logo Ekanda em Branco */}
-          <div className="px-4 py-4 flex items-center justify-between border-b border-white/10">
-            <Link href="/admin" onClick={onClose} className="block">
+          {/* Brand Header — Logo Ekanda Centralizada em Branco */}
+          <div className="px-2 py-4 flex items-center justify-between border-b border-white/10 relative">
+            <Link href="/admin" onClick={onClose} className="flex items-center justify-center mx-auto">
               <Image
                 src={logo}
                 alt="Ekanda GROUP"
                 width={180}
                 height={55}
                 priority
-                className="h-20 w-auto object-contain brightness-0 invert drop-shadow-sm"
+                className="h-10 w-auto object-contain brightness-0 invert drop-shadow-sm"
               />
             </Link>
 
             <button
               onClick={onClose}
-              className="lg:hidden p-1.5 rounded-full hover:bg-white/10 text-white/80 transition-colors"
+              className="lg:hidden absolute right-2 top-3.5 p-1.5 rounded-md hover:bg-white/10 text-white/80 transition-colors"
+              aria-label="Fechar menu"
             >
               <X size={18} />
             </button>
           </div>
 
-          {/* Navigation Links (Pill Style Chudobank) */}
-          <nav className="space-y-1.5 px-1">
+          {/* Navigation Links (Estilo Minimalista com rounded-md) */}
+          <nav className="space-y-1 px-1">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive =
@@ -83,17 +84,17 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
                   key={item.href}
                   href={item.href}
                   onClick={onClose}
-                  className={`flex items-center justify-between px-4 py-3 rounded-2xl font-heading text-xs font-bold uppercase tracking-wider transition-all duration-200 ${
+                  className={`flex items-center justify-between px-3.5 py-2.5 rounded-md font-heading text-xs uppercase tracking-wider transition-all duration-200 ${
                     isActive
-                      ? "bg-white text-primary shadow-lg shadow-black/15 scale-[1.01]"
-                      : "text-white/70 hover:text-white hover:bg-white/10"
+                      ? "bg-white text-primary font-extrabold shadow-md shadow-black/10"
+                      : "text-white/70 font-semibold hover:text-white hover:bg-white/10"
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon size={18} className={isActive ? "text-primary" : "text-white/60"} />
+                    <Icon size={17} className={isActive ? "text-primary" : "text-white/60"} />
                     <span>{item.label}</span>
                   </div>
-                  {isActive && <ChevronRight size={14} className="text-primary/60" />}
+                  {isActive && <ChevronRight size={14} className="text-primary/70" />}
                 </Link>
               );
             })}
@@ -101,7 +102,7 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
         </div>
 
         {/* Sidebar Footer */}
-        <div className="px-4 py-4 border-t border-white/10 text-[10px] text-white/50 text-center font-sans tracking-wide">
+        <div className="px-4 py-3 border-t border-white/10 text-[10px] text-white/50 text-center font-sans tracking-wide">
           <p className="font-bold text-white/70 uppercase">Portfólio Comunique</p>
           <p className="text-[9px] text-white/40 mt-0.5">Ekanda Group © 2026</p>
         </div>
