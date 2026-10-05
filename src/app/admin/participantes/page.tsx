@@ -116,10 +116,10 @@ export default function AdminParticipantesPage() {
       {/* Mensagem de Notificação */}
       {message && (
         <div
-          className={`p-4 rounded-card text-xs font-bold border ${
+          className={`p-4 rounded-2xl text-xs font-bold border transition-all ${
             message.type === "success"
-              ? "bg-success/10 border-success/30 text-success"
-              : "bg-error/10 border-error/30 text-error"
+              ? "bg-emerald-50 border-emerald-200 text-emerald-800"
+              : "bg-rose-50 border-rose-200 text-rose-800"
           }`}
         >
           {message.text}
@@ -127,22 +127,23 @@ export default function AdminParticipantesPage() {
       )}
 
       {/* Cabeçalho de Ações */}
-      <div className="bg-white p-6 rounded-card shadow-sm border border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="bg-white p-6 sm:p-8 rounded-[24px] shadow-xs border border-border/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="font-heading font-extrabold text-lg text-primary-dark">
+          <h2 className="font-heading font-black text-lg text-primary-dark tracking-tight">
             Participantes & Certificados
           </h2>
-          <p className="text-xs text-text-muted">
+          <p className="text-xs text-text-muted mt-1">
             Consulte a lista oficial, exporte dados em CSV ou emita ingressos presenciais.
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+        <div className="flex flex-wrap gap-2.5 w-full sm:w-auto">
           <Button
             size="sm"
             variant="outline"
             onClick={downloadCsv}
-            leftIcon={<FileSpreadsheet size={16} />}
+            className="rounded-full font-bold uppercase text-[11px] border-border hover:bg-surface-warm"
+            leftIcon={<FileSpreadsheet size={15} />}
           >
             Exportar CSV
           </Button>
@@ -151,7 +152,8 @@ export default function AdminParticipantesPage() {
             size="sm"
             onClick={handleCreateManualTicket}
             disabled={actionLoading === "create-ticket"}
-            leftIcon={<PlusCircle size={16} />}
+            className="rounded-full font-bold uppercase text-[11px] bg-primary hover:bg-primary-hover shadow-xs"
+            leftIcon={<PlusCircle size={15} />}
           >
             Gerar Ingresso Avulso
           </Button>
@@ -160,32 +162,32 @@ export default function AdminParticipantesPage() {
 
       {/* Modal de Ingresso Avulso Gerado */}
       {createdQrUrl && (
-        <div className="p-6 bg-white rounded-card shadow-sm border border-border flex flex-col items-center">
-          <span className="text-xs font-heading font-bold uppercase text-primary mb-2">
+        <div className="p-6 bg-white rounded-[24px] shadow-md border border-gold/40 flex flex-col items-center">
+          <span className="text-xs font-heading font-extrabold uppercase text-primary tracking-widest mb-3">
             Novo Ingresso Presencial Gerado
           </span>
-          <div className="p-4 bg-white rounded-card shadow-sm border border-border mb-3 text-center">
+          <div className="p-4 bg-white rounded-2xl shadow-xs border border-border mb-3 text-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={createdQrUrl} alt="QR Code gerado" className="w-48 h-48 mx-auto" />
           </div>
-          <div className="flex items-center gap-2 text-xs font-mono mb-3">
+          <div className="flex items-center gap-2 text-xs font-mono mb-4 bg-background-soft px-4 py-2 rounded-full border border-border/80">
             <span className="truncate max-w-xs">{createdToken}</span>
-            <button onClick={copyToken} className="p-1 hover:bg-surface-warm rounded text-primary">
+            <button onClick={copyToken} className="p-1 hover:bg-surface-warm rounded-full text-primary">
               {copiedToken ? <Check size={14} /> : <Copy size={14} />}
             </button>
           </div>
-          <Button size="sm" variant="secondary" onClick={() => setCreatedQrUrl(null)}>
+          <Button size="sm" variant="secondary" onClick={() => setCreatedQrUrl(null)} className="rounded-full font-bold text-xs">
             Fechar Ingresso Gerado
           </Button>
         </div>
       )}
 
       {/* Tabela de Participantes */}
-      <div className="bg-white rounded-card shadow-sm border border-border overflow-hidden">
+      <div className="bg-white rounded-[24px] shadow-xs border border-border/80 overflow-hidden">
         {/* Barra de Pesquisa */}
-        <div className="p-4 bg-background-soft border-b border-border flex items-center justify-between">
+        <div className="p-4 bg-background-soft/80 border-b border-border/60 flex items-center justify-between">
           <div className="relative w-full sm:w-80">
-            <Search className="w-4 h-4 text-text-muted absolute left-3 top-3" />
+            <Search className="w-4 h-4 text-text-muted absolute left-3.5 top-3" />
             <input
               type="text"
               value={search}
@@ -194,56 +196,56 @@ export default function AdminParticipantesPage() {
                 setPage(1);
               }}
               placeholder="Pesquisar por nome ou código..."
-              className="w-full rounded-input border border-border pl-9 pr-4 py-2 text-xs outline-none focus:border-primary"
+              className="w-full rounded-full border border-border/80 bg-white pl-9 pr-4 py-2 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
             />
           </div>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-background-soft uppercase font-heading font-bold text-text-muted border-b border-border">
+            <thead className="bg-background-soft/60 uppercase font-heading font-bold text-[10px] text-text-muted border-b border-border/60 tracking-wider">
               <tr>
-                <th className="p-4">Série</th>
+                <th className="p-4 pl-6">Série</th>
                 <th className="p-4">Nome do Participante</th>
                 <th className="p-4">Código de Verificação</th>
                 <th className="p-4">Data de Emissão</th>
                 <th className="p-4">Estado</th>
-                <th className="p-4 text-right">Ações</th>
+                <th className="p-4 pr-6 text-right">Ações</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border">
+            <tbody className="divide-y divide-border/50">
               {certs.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-text-muted">
+                  <td colSpan={6} className="p-12 text-center text-text-muted">
                     Nenhum certificado emitido encontrado.
                   </td>
                 </tr>
               ) : (
                 certs.map((c) => (
-                  <tr key={c.id} className="hover:bg-surface-warm/40 transition-colors">
-                    <td className="p-4 font-mono font-bold text-primary">{c.serialLabel}</td>
-                    <td className="p-4 font-bold text-text">{c.fullName}</td>
+                  <tr key={c.id} className="hover:bg-background-soft/80 transition-colors">
+                    <td className="p-4 pl-6 font-mono font-bold text-primary">{c.serialLabel}</td>
+                    <td className="p-4 font-bold text-primary-dark">{c.fullName}</td>
                     <td className="p-4 font-mono text-text-muted">{c.verificationCode}</td>
                     <td className="p-4 text-text-muted">
                       {new Date(c.issuedAt).toLocaleDateString("pt-PT")}
                     </td>
                     <td className="p-4">
                       <span
-                        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-heading font-bold uppercase ${
+                        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-heading font-extrabold uppercase ${
                           c.status === "VALID"
-                            ? "bg-success/10 text-success"
-                            : "bg-error/10 text-error"
+                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                            : "bg-rose-50 text-rose-700 border border-rose-200"
                         }`}
                       >
                         {c.status === "VALID" ? "Válido" : "Revogado"}
                       </span>
                     </td>
-                    <td className="p-4 text-right space-x-2">
+                    <td className="p-4 pr-6 text-right space-x-1.5">
                       {c.status === "VALID" ? (
                         <button
                           onClick={() => handleCertAction(c.id, "REVOKE")}
                           disabled={actionLoading === c.id}
-                          className="p-1.5 text-error hover:bg-error/10 rounded transition-colors"
+                          className="p-1.5 text-rose-600 hover:bg-rose-50 rounded-full transition-colors"
                           title="Revogar certificado"
                         >
                           <Ban size={16} />
@@ -252,7 +254,7 @@ export default function AdminParticipantesPage() {
                         <button
                           onClick={() => handleCertAction(c.id, "RESTORE")}
                           disabled={actionLoading === c.id}
-                          className="p-1.5 text-success hover:bg-success/10 rounded transition-colors"
+                          className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-full transition-colors"
                           title="Restaurar certificado"
                         >
                           <CheckCircle2 size={16} />
@@ -261,7 +263,7 @@ export default function AdminParticipantesPage() {
                       <button
                         onClick={() => handleCertAction(c.id, "REGENERATE")}
                         disabled={actionLoading === c.id}
-                        className="p-1.5 text-primary hover:bg-primary/10 rounded transition-colors"
+                        className="p-1.5 text-primary hover:bg-surface-warm rounded-full transition-colors"
                         title="Regenerar código de verificação"
                       >
                         <RefreshCw size={16} />
@@ -276,9 +278,9 @@ export default function AdminParticipantesPage() {
 
         {/* Paginação */}
         {totalPages > 1 && (
-          <div className="p-4 border-t border-border flex items-center justify-between text-xs">
-            <span className="text-text-muted">
-              Página {page} de {totalPages}
+          <div className="p-4 border-t border-border/60 flex items-center justify-between text-xs bg-background-soft/40">
+            <span className="text-text-muted text-[11px]">
+              Página <strong className="text-text">{page}</strong> de {totalPages}
             </span>
             <div className="flex gap-2">
               <Button
@@ -286,6 +288,7 @@ export default function AdminParticipantesPage() {
                 variant="outline"
                 disabled={page <= 1}
                 onClick={() => setPage((p) => p - 1)}
+                className="rounded-full text-[11px] font-bold uppercase"
               >
                 Anterior
               </Button>
@@ -294,6 +297,7 @@ export default function AdminParticipantesPage() {
                 variant="outline"
                 disabled={page >= totalPages}
                 onClick={() => setPage((p) => p + 1)}
+                className="rounded-full text-[11px] font-bold uppercase"
               >
                 Próxima
               </Button>
@@ -304,3 +308,4 @@ export default function AdminParticipantesPage() {
     </div>
   );
 }
+

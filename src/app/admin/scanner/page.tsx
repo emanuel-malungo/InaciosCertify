@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import jsQR from "jsqr";
-import { Camera, CheckCircle2, QrCode, Loader2 } from "lucide-react";
+import { Camera, CheckCircle2, QrCode, Loader2, Sparkles } from "lucide-react";
 
 type ScanResult = {
   state: "READY_TO_ISSUE" | "ALREADY_ISSUED";
@@ -97,42 +97,52 @@ export default function AdminScannerPage() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <div className="bg-white p-6 sm:p-8 rounded-card shadow-sm border border-border text-center">
-        <h2 className="font-heading font-extrabold text-2xl text-primary-dark">
+      <div className="bg-white p-6 sm:p-10 rounded-[28px] shadow-xs border border-border/80 text-center">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-heading font-extrabold uppercase bg-gold/15 text-primary border border-gold/30 mb-3">
+          <Sparkles size={12} className="text-gold" /> Scanner em Tempo Real
+        </span>
+        
+        <h2 className="font-heading font-black text-xl sm:text-2xl text-primary-dark tracking-tight">
           Scanner Presencial de Validação
         </h2>
-        <p className="text-xs text-text-muted mt-1 mb-6">
-          Aponte a câmara para o QR Code do participante para verificar a validade do seu ingresso e do certificado em tempo real.
+        <p className="text-xs text-text-muted mt-1 mb-6 max-w-lg mx-auto">
+          Aponte a câmara para o QR Code do participante para verificar a validade do seu ingresso e do certificado instantaneamente.
         </p>
 
-        <div className="w-full relative aspect-square bg-black rounded-card overflow-hidden flex items-center justify-center mx-auto max-w-md">
+        <div className="w-full relative aspect-square bg-primary-dark rounded-[24px] overflow-hidden flex items-center justify-center mx-auto max-w-md shadow-inner border border-white/10">
           <video ref={videoRef} className="w-full h-full object-cover" />
           <canvas ref={canvasRef} className="hidden" />
 
           {!cameraActive && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 text-white p-4">
-              <Camera size={36} className="mb-2 text-primary" />
-              <p className="text-xs">A ligar a câmara de validação...</p>
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-primary-dark/90 text-white p-4">
+              <Camera size={40} className="mb-3 text-gold animate-bounce" />
+              <p className="text-xs font-heading font-bold uppercase tracking-wider">
+                A inicializar câmara...
+              </p>
             </div>
           )}
 
           {loading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/60 text-white">
-              <Loader2 className="animate-spin text-primary" size={36} />
+            <div className="absolute inset-0 flex items-center justify-center bg-primary-dark/80 backdrop-blur-xs text-white">
+              <Loader2 className="animate-spin text-gold" size={40} />
             </div>
           )}
         </div>
 
-        {scanError && <p className="mt-4 text-xs font-bold text-error">{scanError}</p>}
+        {scanError && (
+          <div className="mt-4 p-3 bg-rose-50 text-rose-800 rounded-xl text-xs font-bold border border-rose-200">
+            {scanError}
+          </div>
+        )}
 
         {scanResult && (
-          <div className="mt-6 p-6 bg-background-soft rounded-card border border-border text-left">
+          <div className="mt-6 p-6 bg-background-soft rounded-2xl border border-border/80 text-left space-y-3">
             {scanResult.state === "ALREADY_ISSUED" && scanResult.certificate ? (
               <div>
-                <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase text-success mb-2">
-                  <CheckCircle2 size={16} /> Certificado Emitido & Autêntico
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-heading font-extrabold uppercase bg-emerald-50 text-emerald-800 border border-emerald-200 mb-2">
+                  <CheckCircle2 size={14} /> Certificado Emitido & Autêntico
                 </div>
-                <h3 className="font-heading font-black text-xl text-primary-dark">
+                <h3 className="font-heading font-black text-xl text-primary-dark tracking-tight">
                   {scanResult.certificate.fullName}
                 </h3>
                 <p className="text-xs text-text-muted mt-1">
@@ -144,10 +154,10 @@ export default function AdminScannerPage() {
               </div>
             ) : (
               <div>
-                <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase text-primary mb-2">
-                  <QrCode size={16} /> Ingresso Válido (Pendente de Emissão)
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-heading font-extrabold uppercase bg-amber-50 text-amber-800 border border-amber-200 mb-2">
+                  <QrCode size={14} /> Ingresso Válido (Pendente de Emissão)
                 </div>
-                <p className="text-xs text-text">
+                <p className="text-xs text-text leading-relaxed">
                   O participante possui um QR Code válido e pode concluir a emissão inserindo o seu nome na página pública.
                 </p>
               </div>
@@ -158,3 +168,4 @@ export default function AdminScannerPage() {
     </div>
   );
 }
+
