@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Lock, Mail, Loader2, Shield } from "lucide-react";
+import Image from "next/image";
+import logo from "@/assets/images/logo.png";
+import { Lock, Mail, Loader2, ArrowRight } from "lucide-react";
 import Button from "@/components/ui/Button";
 
 export default function AdminLoginPage() {
@@ -39,72 +41,93 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-background-soft flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-card shadow-premium border border-border overflow-hidden">
-        {/* Banner Superior */}
-        <div className="bg-gradient-to-r from-primary-dark via-primary to-primary-hover p-8 text-white text-center">
-          <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center mx-auto mb-3 border border-white/20">
-            <Shield size={24} />
+    <main className="min-h-screen bg-gray-50/80 flex items-center justify-center p-4 sm:p-6 font-sans text-gray-900 antialiased">
+      <div className="w-full max-w-md bg-white rounded-xl shadow-2xl shadow-gray-200/60 border border-gray-100 p-8 sm:p-10 space-y-8 relative overflow-hidden">
+        
+        {/* Sutil brilho de fundo com a cor primária do sistema */}
+        <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+
+        {/* Logo da Ekanda & Cabeçalho Minimalista */}
+        <div className="flex flex-col items-center text-center space-y-4 relative z-10">
+          <div className="p-3.5 flex items-center justify-center">
+            <Image
+              src={logo}
+              alt="Ekanda GROUP"
+              width={180}
+              height={55}
+              priority
+              className="h-20 w-auto object-contain"
+            />
           </div>
-          <span className="font-heading font-bold text-[10px] uppercase tracking-widest text-gold-light">
-            Inácios Certify · Painel de Gestão
-          </span>
-          <h1 className="mt-1 font-heading font-extrabold text-2xl tracking-tight">
-            Acesso Restrito
-          </h1>
+
+          <div className="space-y-1">
+            <p className="text-xs text-gray-500 font-medium max-w-xs">
+              Introduza as suas credenciais administrativas para aceder ao sistema.
+            </p>
+          </div>
         </div>
 
-        {/* Formulario */}
-        <form onSubmit={handleSubmit} className="p-8 space-y-5">
-          {error && (
-            <div className="p-3 bg-error/10 border border-error/20 rounded-card text-xs text-error font-semibold text-center">
-              {error}
-            </div>
-          )}
+        {/* Alerta de Erro */}
+        {error && (
+          <div className="p-3.5 bg-rose-50 border border-rose-200/80 rounded-2xl text-xs text-rose-700 font-bold text-center">
+            {error}
+          </div>
+        )}
 
+        {/* Formulário Minimalista (White & Gray com destaque no botão Primário) */}
+        <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
           <div>
-            <label className="text-xs font-heading font-bold uppercase tracking-wider text-text-muted block mb-1.5">
-              E-mail Administrativo
-            </label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-text-muted absolute left-3.5 top-3.5" />
+              <Mail className="w-4 h-4 text-gray-400 absolute left-1 top-3 pointer-events-none" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@inacioscertify.com"
-                className="w-full rounded-input border border-border pl-10 pr-4 py-2.5 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm"
+                className="w-full bg-transparent text-xs font-medium text-gray-900 placeholder:text-gray-400 pl-8 pr-2 py-2.5 border-b-2 border-gray-200 focus:border-primary outline-none transition-all rounded-none"
               />
             </div>
           </div>
 
           <div>
-            <label className="text-xs font-heading font-bold uppercase tracking-wider text-text-muted block mb-1.5">
-              Palavra-passe
-            </label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-text-muted absolute left-3.5 top-3.5" />
+              <Lock className="w-4 h-4 text-gray-400 absolute left-1 top-3 pointer-events-none" />
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full rounded-input border border-border pl-10 pr-4 py-2.5 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm"
+                className="w-full bg-transparent text-xs font-medium text-gray-900 placeholder:text-gray-400 pl-8 pr-2 py-2.5 border-b-2 border-gray-200 focus:border-primary outline-none transition-all rounded-none"
               />
             </div>
           </div>
 
-          <Button type="submit" size="lg" fullWidth disabled={loading}>
-            {loading ? <Loader2 className="animate-spin" size={18} /> : "Iniciar Sessão"}
+          <Button
+            type="submit"
+            size="lg"
+            fullWidth
+            disabled={loading}
+            className="rounded-full bg-primary hover:bg-primary-hover text-white font-heading font-bold text-xs uppercase tracking-wider py-3.5 shadow-md shadow-primary/20 transition-all hover:scale-[1.01]"
+          >
+            {loading ? (
+              <Loader2 className="animate-spin" size={18} />
+            ) : (
+              <span className="flex items-center justify-center gap-2">
+                Iniciar Sessão <ArrowRight size={16} />
+              </span>
+            )}
           </Button>
 
-          <p className="text-[11px] text-text-muted text-center pt-2">
-            Portfólio Comunique — Ekanda Group
-          </p>
+          <div className="pt-2 text-center">
+            <span className="text-[10px] text-gray-400 font-medium">
+              Inácios Certify · Portfólio Comunique © 2026
+            </span>
+          </div>
         </form>
       </div>
     </main>
   );
 }
+
