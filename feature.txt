@@ -1,0 +1,32 @@
+Contexto e Objetivo:
+
+Preciso implementar um fluxo de credenciamento/check-in via QR Code para geração e validação de certificados de eventos, sem exigir cadastro ou login prévio por parte do participante.
+
+1. Requisitos Funcionais (Fluxo do Usuário)
+Geração do QR Code / Ingresso:
+
+O sistema gera um QR Code único vinculado estritamente à sessão/dispositivo do usuário (via fingerprinting/localStorage/token único assinado).
+
+O QR Code só fica ativo para leitura/emissão no dia oficial do evento, embora a geração prévia e a interface já possam estar públicas no site.
+
+Leitura do QR Code:
+
+O participante pode validar o código através da câmera (scanner em tempo real) ou fazendo upload de imagem/print do QR Code.
+
+Prevenção de duplicidade e partilha: Um QR Code gerado num dispositivo não pode ser reutilizado ou resgatado por outro participante; cada QR Code dá direito a apenas uma emissão.
+
+Emissão e Reemissão do Certificado:
+
+Primeiro acesso: O usuário insere o seu nome completo e emite o certificado.
+
+Acessos subsequentes: Caso o mesmo QR Code seja lido novamente, o sistema não deve permitir nova emissão nem alteração de nome; deve apenas exibir a opção de visualizar/baixar novamente o certificado já emitido.
+
+2. Requisitos de Autenticidade e Validação
+Cada certificado emitido deve conter um QR Code de validação pública (com URL única/hash criptográfico).
+
+Qualquer pessoa ou avaliador que escanear esse QR Code do documento deve ser redirecionado para uma tela pública de conferência da autenticidade (exibindo nome, data, evento e status de validade).
+
+3. Painel Administrativo
+Listagem de todos os participantes que emitiram certificados (com dados de data/hora de emissão).
+
+Capacidade de consultar, regenerar ou invalidar QR Codes e certificados gerados.

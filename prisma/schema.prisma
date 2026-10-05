@@ -1,0 +1,116 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum TicketStatus {
+  ACTIVE
+  CLAIMED
+  EXPIRED
+  INVALIDATED
+}
+
+enum CertificateStatus {
+  VALID
+  REVOKED
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  EVENT_MANAGER
+}
+
+model Event {
+  id               String        @id @default(uuid())
+  slug             String        @unique
+  name             String
+  description      String?
+  eventDate        DateTime
+  activeForCheckin Boolean       @default(false)
+  
+  tickets          Ticket[]
+  certificates     Certificate[]
+
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@index([slug])
+  @@index([eventDate])
+}
+
+model Ticket {
+  id                String       @id @default(uuid())
+  code              String       @unique // Código legível amigável (ex: IC-TKT-8X92)
+  token             String       @unique // Hash/Token assinado seguro embutido no QR Code
+  deviceFingerprint String?      // Identificador de sessão/dispositivo para vínculo único
+  status            TicketStatus @default(ACTIVE)
+  
+  eventId           String
+  event             Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  certificate       Certificate?
+
+  claimedAt         DateTime?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  @@index([token])
+  @@index([code])
+  @@index([eventId])
+  @@index([deviceFingerprint])
+}
+
+model Certificate {
+  id               String            @id @default(uuid())
+  validationCode   String            @unique // Código público legível (ex: CERT-2026-9F8A1B)
+  verificationHash String            @unique // Hash SHA256 criptográfico para QR Code de validação
+  fullName         String
+  status           CertificateStatus @default(VALID)
+  
+  ticketId         String            @unique
+  ticket           Ticket            @relation(fields: [ticketId], references: [id], onDelete: Restrict)
+
+  eventId          String
+  event            Event             @relation(fields: [eventId], references: [id], onDelete: Restrict)
+
+  pdfUrl           String?
+  metadata         Json?             // Metadados adicionais (IP, User-Agent, etc.)
+  
+  issuedAt         DateTime          @default(now())
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  @@index([validationCode])
+  @@index([verificationHash])
+  @@index([eventId])
+  @@index([fullName])
+}
+
+model AdminUser {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  role         AdminRole @default(EVENT_MANAGER)
+  apiKey       String?   @unique
+  
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  action    String   // EX: "TICKET_INVALIDATED", "CERTIFICATE_REGENERATED", "EVENT_STATUS_CHANGED"
+  entity    String   // "Ticket", "Certificate", "Event"
+  entityId  String
+  details   Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@index([action])
+  @@index([entityId])
+}
