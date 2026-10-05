@@ -2,7 +2,8 @@
 
 import { useEffect, useState, useRef } from "react";
 import jsQR from "jsqr";
-import { Camera, CheckCircle2, QrCode, Loader2, Sparkles } from "lucide-react";
+import { Camera, CheckCircle2, QrCode, Loader2, Sparkles, KeyRound, ArrowRight, RefreshCw, AlertCircle } from "lucide-react";
+import Button from "@/components/ui/Button";
 
 type ScanResult = {
   state: "READY_TO_ISSUE" | "ALREADY_ISSUED";
@@ -20,6 +21,7 @@ export default function AdminScannerPage() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [cameraActive, setCameraActive] = useState(false);
+  const [manualToken, setManualToken] = useState("");
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
   const [scanError, setScanError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -73,18 +75,20 @@ export default function AdminScannerPage() {
     };
   }, []);
 
-  async function handleAdminScan(token: string) {
+  async function handleAdminScan(tokenToValidate: string) {
+    if (!tokenToValidate.trim()) return;
     setScanError("");
+    setScanResult(null);
     setLoading(true);
     try {
       const res = await fetch("/api/tickets/scan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token }),
+        body: JSON.stringify({ token: tokenToValidate.trim() }),
       });
       const result = await res.json();
       if (!res.ok) {
-        setScanError(result.error?.message || "QR Code inválido.");
+        setScanError(result.error?.message || "QR Code ou Token inválido.");
         return;
       }
       setScanResult(result);
@@ -95,77 +99,226 @@ export default function AdminScannerPage() {
     }
   }
 
+  function handleManualSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    handleAdminScan(manualToken);
+  }
+
+  function handleResetScan() {
+    setScanResult(null);
+    setScanError("");
+    setManualToken("");
+  }
+
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <div className="bg-white p-6 sm:p-10 rounded-[28px] shadow-xs border border-border/80 text-center">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-heading font-extrabold uppercase bg-gold/15 text-primary border border-gold/30 mb-3">
-          <Sparkles size={12} className="text-gold" /> Scanner em Tempo Real
-        </span>
-        
-        <h2 className="font-heading font-black text-xl sm:text-2xl text-primary-dark tracking-tight">
-          Scanner Presencial de Validação
-        </h2>
-        <p className="text-xs text-text-muted mt-1 mb-6 max-w-lg mx-auto">
-          Aponte a câmara para o QR Code do participante para verificar a validade do seu ingresso e do certificado instantaneamente.
-        </p>
-
-        <div className="w-full relative aspect-square bg-primary-dark rounded-[24px] overflow-hidden flex items-center justify-center mx-auto max-w-md shadow-inner border border-white/10">
-          <video ref={videoRef} className="w-full h-full object-cover" />
-          <canvas ref={canvasRef} className="hidden" />
-
-          {!cameraActive && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-primary-dark/90 text-white p-4">
-              <Camera size={40} className="mb-3 text-gold animate-bounce" />
-              <p className="text-xs font-heading font-bold uppercase tracking-wider">
-                A inicializar câmara...
-              </p>
-            </div>
-          )}
-
-          {loading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-primary-dark/80 backdrop-blur-xs text-white">
-              <Loader2 className="animate-spin text-gold" size={40} />
-            </div>
-          )}
+    <div className="h-full flex flex-col space-y-6 max-w-7xl mx-auto font-sans text-text">
+      
+      {/* Cabeçalho da Página (Consistente com a tela de Participantes) */}
+      <div className="bg-white p-6 sm:p-8 rounded-[24px] shadow-xs border border-border/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shrink-0">
+        <div>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-[10px] font-heading font-extrabold uppercase bg-gold/15 text-primary border border-gold/30 mb-2">
+            <Sparkles size={12} className="text-gold" /> Scanner Presencial
+          </span>
+          <h2 className="font-heading font-black text-lg text-primary-dark tracking-tight">
+            Scanner & Validação em Tempo Real
+          </h2>
+          <p className="text-xs text-text-muted mt-0.5">
+            Aponte a câmara para o QR Code do ingresso ou digite o token manualmente para validar a autenticidade.
+          </p>
         </div>
 
-        {scanError && (
-          <div className="mt-4 p-3 bg-rose-50 text-rose-800 rounded-xl text-xs font-bold border border-rose-200">
-            {scanError}
-          </div>
-        )}
+        <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
+          <span className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-md font-heading font-bold text-[11px] uppercase border ${
+            cameraActive ? "bg-emerald-50 text-emerald-800 border-emerald-200" : "bg-amber-50 text-amber-800 border-amber-200"
+          }`}>
+            <span className={`w-2 h-2 rounded-full ${cameraActive ? "bg-emerald-500 animate-pulse" : "bg-amber-500"}`} />
+            {cameraActive ? "Câmara Ativa" : "Câmara Inativa"}
+          </span>
 
-        {scanResult && (
-          <div className="mt-6 p-6 bg-background-soft rounded-2xl border border-border/80 text-left space-y-3">
-            {scanResult.state === "ALREADY_ISSUED" && scanResult.certificate ? (
-              <div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-heading font-extrabold uppercase bg-emerald-50 text-emerald-800 border border-emerald-200 mb-2">
-                  <CheckCircle2 size={14} /> Certificado Emitido & Autêntico
-                </div>
-                <h3 className="font-heading font-black text-xl text-primary-dark tracking-tight">
-                  {scanResult.certificate.fullName}
-                </h3>
-                <p className="text-xs text-text-muted mt-1">
-                  Série: <strong className="font-mono text-primary">{scanResult.certificate.serialLabel}</strong>
-                </p>
-                <p className="text-xs text-text-muted">
-                  Emitido em: {new Date(scanResult.certificate.issuedAt).toLocaleDateString("pt-PT")}
-                </p>
+          {(scanResult || scanError || manualToken) && (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleResetScan}
+              className="rounded-md font-bold uppercase text-[11px] border-border hover:bg-surface-warm"
+              leftIcon={<RefreshCw size={14} />}
+            >
+              Novo Scan
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {/* Grid Principal do Scanner: 2 Colunas (Ocupa 100% da altura flexível) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch flex-1 min-h-0 overflow-y-auto">
+        
+        {/* Coluna 1: Visualizador da Câmara */}
+        <div className="lg:col-span-7 bg-white p-6 rounded-[24px] border border-border/80 shadow-xs flex flex-col justify-between space-y-4">
+          <div className="w-full text-center">
+            <h3 className="font-heading font-bold text-sm text-primary-dark flex items-center justify-center gap-2">
+              <Camera size={18} className="text-primary" /> Leitor de QR Code
+            </h3>
+            <p className="text-[11px] text-text-muted mt-0.5">
+              Posicione o QR Code dentro da moldura para leitura automática instantânea
+            </p>
+          </div>
+
+          <div className="w-full relative aspect-square max-h-[380px] bg-primary-dark rounded-2xl overflow-hidden flex items-center justify-center mx-auto shadow-inner border border-white/10 group">
+            <video ref={videoRef} className="w-full h-full object-cover" />
+            <canvas ref={canvasRef} className="hidden" />
+
+            {/* Viewfinder Target corners overlay */}
+            <div className="absolute inset-8 pointer-events-none border-2 border-dashed border-white/20 rounded-xl flex flex-col justify-between p-2">
+              <div className="flex justify-between">
+                <div className="w-6 h-6 border-t-2 border-l-2 border-gold rounded-tl-md" />
+                <div className="w-6 h-6 border-t-2 border-r-2 border-gold rounded-tr-md" />
               </div>
-            ) : (
-              <div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-heading font-extrabold uppercase bg-amber-50 text-amber-800 border border-amber-200 mb-2">
-                  <QrCode size={14} /> Ingresso Válido (Pendente de Emissão)
-                </div>
-                <p className="text-xs text-text leading-relaxed">
-                  O participante possui um QR Code válido e pode concluir a emissão inserindo o seu nome na página pública.
+              <div className="flex justify-between">
+                <div className="w-6 h-6 border-b-2 border-l-2 border-gold rounded-bl-md" />
+                <div className="w-6 h-6 border-b-2 border-r-2 border-gold rounded-br-md" />
+              </div>
+            </div>
+
+            {!cameraActive && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-primary-dark/95 text-white p-6 text-center">
+                <Camera size={44} className="mb-3 text-gold animate-bounce" />
+                <p className="text-xs font-heading font-bold uppercase tracking-wider">
+                  A inicializar câmara presencial...
+                </p>
+                <p className="text-[11px] text-white/60 mt-1">
+                  Certifique-se de conceder permissão de acesso à câmara no navegador.
                 </p>
               </div>
             )}
+
+            {loading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-primary-dark/80 backdrop-blur-xs text-white">
+                <Loader2 className="animate-spin text-gold" size={44} />
+              </div>
+            )}
           </div>
-        )}
+
+          <p className="text-[10px] text-text-muted text-center font-medium">
+            Foco automático ativo · Mantanha o dispositivo estável a 15-30cm do código
+          </p>
+        </div>
+
+        {/* Coluna 2: Entradas Manuais & Resultados de Validação */}
+        <div className="lg:col-span-5 bg-white p-6 rounded-[24px] border border-border/80 shadow-xs flex flex-col justify-between space-y-6">
+          
+          <div className="space-y-4">
+            <div className="border-b border-border/60 pb-3">
+              <h3 className="font-heading font-bold text-sm text-primary-dark flex items-center gap-2">
+                <KeyRound size={18} className="text-gold" /> Validação Manual por Token
+              </h3>
+              <p className="text-[11px] text-text-muted mt-0.5">
+                Caso a câmara esteja indisponível, introduza o código manualmente
+              </p>
+            </div>
+
+            <form onSubmit={handleManualSubmit} className="space-y-3">
+              <div>
+                <label className="text-[10px] font-heading font-bold uppercase tracking-wider text-text-muted block mb-1">
+                  Código de Token do Ingresso
+                </label>
+                <input
+                  type="text"
+                  value={manualToken}
+                  onChange={(e) => setManualToken(e.target.value)}
+                  placeholder="Ex: eyJhbGciOiJIUzI1Ni..."
+                  className="w-full bg-background-soft focus:bg-white text-xs font-mono text-primary-dark px-3.5 py-2.5 rounded-md border border-border/80 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                />
+              </div>
+
+              <Button
+                type="submit"
+                size="sm"
+                disabled={loading || !manualToken.trim()}
+                className="w-full rounded-md font-bold uppercase text-xs py-2.5 bg-primary hover:bg-primary-hover shadow-xs"
+              >
+                {loading ? (
+                  <Loader2 className="animate-spin" size={16} />
+                ) : (
+                  <span className="flex items-center justify-center gap-1.5">
+                    Validar Código <ArrowRight size={14} />
+                  </span>
+                )}
+              </Button>
+            </form>
+          </div>
+
+          {/* Resultado da Validação */}
+          <div className="space-y-3">
+            {scanError && (
+              <div className="p-4 bg-rose-50 border border-rose-200 text-rose-800 rounded-md text-xs font-bold flex items-start gap-2.5 animate-in fade-in">
+                <AlertCircle size={18} className="text-rose-600 shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <span className="font-heading font-black block uppercase text-[10px] tracking-wider text-rose-900">
+                    Erro de Validação
+                  </span>
+                  <span>{scanError}</span>
+                </div>
+              </div>
+            )}
+
+            {scanResult ? (
+              <div className="p-5 bg-background-soft/90 rounded-2xl border border-border/80 space-y-3 animate-in fade-in">
+                {scanResult.state === "ALREADY_ISSUED" && scanResult.certificate ? (
+                  <div>
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-[10px] font-heading font-extrabold uppercase bg-emerald-50 text-emerald-800 border border-emerald-200 mb-2">
+                      <CheckCircle2 size={14} /> Certificado Válido & Autêntico
+                    </span>
+                    <h4 className="font-heading font-black text-lg text-primary-dark tracking-tight">
+                      {scanResult.certificate.fullName}
+                    </h4>
+                    <div className="mt-2 space-y-1 text-xs text-text-muted">
+                      <p>
+                        Série: <strong className="font-mono text-primary">{scanResult.certificate.serialLabel}</strong>
+                      </p>
+                      <p>
+                        Código: <strong className="font-mono text-text">{scanResult.certificate.verificationCode}</strong>
+                      </p>
+                      <p>
+                        Data: {new Date(scanResult.certificate.issuedAt).toLocaleDateString("pt-PT")}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-[10px] font-heading font-extrabold uppercase bg-amber-50 text-amber-800 border border-amber-200 mb-2">
+                      <QrCode size={14} /> Ingresso Válido (Pendente)
+                    </span>
+                    <p className="text-xs text-primary-dark font-medium leading-relaxed">
+                      O participante possui um QR Code válido e pode concluir a emissão do certificado na página pública.
+                    </p>
+                  </div>
+                )}
+
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleResetScan}
+                  className="w-full mt-2 rounded-md font-bold uppercase text-[11px] border-border hover:bg-white"
+                  leftIcon={<RefreshCw size={14} />}
+                >
+                  Validar Novo Código
+                </Button>
+              </div>
+            ) : (
+              !scanError && (
+                <div className="p-6 bg-background-soft/40 border border-dashed border-border/80 rounded-2xl text-center text-text-muted text-xs">
+                  <QrCode size={28} className="mx-auto mb-2 text-text-muted/60" />
+                  Aguardando leitura de QR Code ou validação manual de token...
+                </div>
+              )
+            )}
+          </div>
+
+        </div>
+
       </div>
     </div>
   );
 }
+
 
