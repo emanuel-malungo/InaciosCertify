@@ -43,7 +43,7 @@ export default function AdminLoginPage() {
   return (
     <main className="min-h-screen bg-gray-50/80 flex items-center justify-center p-4 sm:p-6 font-sans text-gray-900 antialiased">
       <div className="w-full max-w-md bg-white rounded-xl shadow-2xl shadow-gray-200/60 border border-gray-100 p-8 sm:p-10 space-y-8 relative overflow-hidden">
-        
+
         {/* Sutil brilho de fundo com a cor primária do sistema */}
         <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
 
@@ -84,7 +84,7 @@ export default function AdminLoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@inacioscertify.com"
+                placeholder="Digite o teu email"
                 className="w-full bg-transparent text-xs font-medium text-gray-900 placeholder:text-gray-400 pl-8 pr-2 py-2.5 border-b-2 border-gray-200 focus:border-primary outline-none transition-all rounded-none"
               />
             </div>
@@ -98,7 +98,7 @@ export default function AdminLoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••••••"
+                placeholder="Digite a tua senha"
                 className="w-full bg-transparent text-xs font-medium text-gray-900 placeholder:text-gray-400 pl-8 pr-2 py-2.5 border-b-2 border-gray-200 focus:border-primary outline-none transition-all rounded-none"
               />
             </div>
