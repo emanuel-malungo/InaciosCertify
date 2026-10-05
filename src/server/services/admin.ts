@@ -150,19 +150,27 @@ export async function listAuditLogs(limit: number = 20) {
   }));
 }
 
-export async function listAdminCertificates(params: { search?: string; page?: number; limit?: number }) {
+export async function listAdminCertificates(params: { search?: string; status?: string; page?: number; limit?: number }) {
   const page = Math.max(1, params.page || 1);
   const limit = Math.min(100, Math.max(10, params.limit || 20));
   const skip = (page - 1) * limit;
 
-  const where = params.search
-    ? {
-        OR: [
-          { fullName: { contains: params.search, mode: "insensitive" as const } },
-          { verificationCode: { contains: params.search, mode: "insensitive" as const } },
-        ],
-      }
-    : {};
+  const whereConditions: Prisma.CertificateWhereInput[] = [];
+
+  if (params.search) {
+    whereConditions.push({
+      OR: [
+        { fullName: { contains: params.search, mode: "insensitive" as const } },
+        { verificationCode: { contains: params.search, mode: "insensitive" as const } },
+      ],
+    });
+  }
+
+  if (params.status && (params.status === "VALID" || params.status === "REVOKED")) {
+    whereConditions.push({ status: params.status as "VALID" | "REVOKED" });
+  }
+
+  const where: Prisma.CertificateWhereInput = whereConditions.length > 0 ? { AND: whereConditions } : {};
 
   const [total, items] = await Promise.all([
     prisma.certificate.count({ where }),
