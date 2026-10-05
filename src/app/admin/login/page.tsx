@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import logo from "@/assets/images/logo.png";
+import bgCert from "@/assets/images/bg_white.png";
 import { Lock, Mail, Loader2, ArrowRight } from "lucide-react";
 import Button from "@/components/ui/Button";
 
@@ -41,8 +42,21 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50/80 flex items-center justify-center p-4 sm:p-6 font-sans text-gray-900 antialiased">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-2xl shadow-gray-200/60 border border-gray-100 p-8 sm:p-10 space-y-8 relative overflow-hidden">
+    <main className="relative min-h-screen bg-gray-50 flex items-center justify-center p-4 sm:p-6 font-sans text-gray-900 antialiased overflow-hidden">
+      {/* Fundo do Certificado */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <Image
+          src={bgCert}
+          alt="Fundo do Certificado"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center opacity-75"
+        />
+        <div className="absolute inset-0 bg-white/30 backdrop-blur-[1px]" />
+      </div>
+
+      <div className="w-full max-w-md bg-white/95 backdrop-blur-md rounded-xl shadow-2xl shadow-gray-200/80 border border-gray-100 p-8 sm:p-10 space-y-8 relative z-10 overflow-hidden">
 
         {/* Sutil brilho de fundo com a cor primária do sistema */}
         <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
