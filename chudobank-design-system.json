@@ -1,0 +1,555 @@
+{
+  "$schema": "design-system/v1",
+  "meta": {
+    "name": "Chudobank Design System",
+    "version": "1.0.0",
+    "description": "Design system extraído de um dashboard de internet banking. Estilo moderno, limpo e suave: moldura escura envolvendo uma grande superfície branca arredondada, cards em cinza quase branco, acentos pastel (azul, rosa, pêssego) e tipografia geométrica.",
+    "source": "Análise visual de mockup 1200x750 px",
+    "referenceViewport": { "width": 1200, "height": 750, "unit": "px" },
+    "language": "ru-RU",
+    "note": "Valores numéricos são estimativas medidas visualmente na imagem. Ajuste conforme necessário na implementação."
+  },
+
+  "principles": [
+    "Contraste de moldura: shell escuro (#333) + área de conteúdo branca com cantos muito arredondados criam foco no conteúdo.",
+    "Suavidade: cantos arredondados em todos os elementos (16–24px), bordas finas e quase invisíveis, sem sombras pesadas.",
+    "Hierarquia por tamanho e cor: títulos e valores em preto suave; metadados em cinza claro e tamanho pequeno.",
+    "Acentos pastel: cor é usada para semântica (categoria, progresso, promoção) e nunca de forma saturada, exceto em logos de marcas.",
+    "Respiro generoso: muito espaço em branco entre blocos e linhas de lista amplas (~68px).",
+    "Ícones outline finos, consistentes com o peso leve da tipografia."
+  ],
+
+  "foundations": {
+    "color": {
+      "palette": {
+        "neutral": {
+          "shell": { "value": "#343434", "usage": "Fundo da moldura/tela, sidebar, cartão bancário" },
+          "shellDeep": { "value": "#2E2E2E", "usage": "Variação para áreas mais profundas (opcional)" },
+          "white": { "value": "#FFFFFF", "usage": "Superfície principal, search, aba ativa da sidebar" },
+          "surface50": { "value": "#FAFAFA", "usage": "Cards secundários e painel lateral direito" },
+          "surface100": { "value": "#F3F3F3", "usage": "Trilha (track) do gráfico donut, hover leve" },
+          "border": { "value": "#E8E8E8", "usage": "Borda de cards (1px)" },
+          "divider": { "value": "#E4E4E4", "usage": "Divisórias entre linhas da lista de operações" },
+          "textPrimary": { "value": "#2B2B2B", "usage": "Títulos, valores, nomes" },
+          "textSecondary": { "value": "#6B6B6B", "usage": "Texto de apoio" },
+          "textMuted": { "value": "#B5B5B5", "usage": "Datas, rótulos pequenos, 'Все >', ícones de menu" },
+          "textOnDark": { "value": "#FFFFFF", "usage": "Texto sobre fundo escuro" },
+          "textOnDarkMuted": { "value": "#9A9A9A", "usage": "Rótulos no cartão escuro ('world', 'Card Platinum')" },
+          "iconOnDark": { "value": "#8C8C8C", "usage": "Ícones inativos na sidebar" }
+        },
+        "accent": {
+          "periwinkle": { "value": "#A9B9FF", "usage": "Progresso do donut (gasto)" },
+          "periwinkleSoft": { "value": "#EAEEFF", "usage": "Fundo do card de categoria 'Развлечения'" },
+          "rose": { "value": "#FF9E9E", "usage": "Acento associado a 'Переводы'" },
+          "roseSoft": { "value": "#FFECEC", "usage": "Fundo do card de categoria 'Переводы'" },
+          "peach": { "value": "#FFD8BC", "usage": "Fundo do banner promocional" },
+          "peachStrong": { "value": "#FF8A5B", "usage": "Detalhes da ilustração (foguete/roupa)" }
+        },
+        "status": {
+          "online": { "value": "#4CD964", "usage": "Indicador de presença no avatar" },
+          "notification": { "value": "#FFA928", "usage": "Ponto de notificação no sino" },
+          "expense": { "value": "#2B2B2B", "usage": "Valores de despesa (-89 ₽) em preto, não vermelho" }
+        },
+        "brand": {
+          "pyaterochka": { "value": "#E31E24", "usage": "Logo Пятёрочка" },
+          "tele2": { "value": "#1E1E2D", "usage": "Logo Tele2 (fundo escuro)" },
+          "mosmetro": { "value": "#E2231A", "usage": "Logo Mosmetro" },
+          "mcdonalds": { "value": "#FFC300", "usage": "Logo Макдоналдс" },
+          "mgts": { "value": "#0A7DD6", "usage": "Logo MGTS" },
+          "mastercardRed": { "value": "#EB001B" },
+          "mastercardOrange": { "value": "#F79E1B" }
+        }
+      },
+      "semanticTokens": {
+        "bg.app": "{palette.neutral.shell}",
+        "bg.surface": "{palette.neutral.white}",
+        "bg.card": "{palette.neutral.surface50}",
+        "bg.card.dark": "{palette.neutral.shell}",
+        "bg.track": "{palette.neutral.surface100}",
+        "border.default": "{palette.neutral.border}",
+        "border.divider": "{palette.neutral.divider}",
+        "text.primary": "{palette.neutral.textPrimary}",
+        "text.secondary": "{palette.neutral.textSecondary}",
+        "text.muted": "{palette.neutral.textMuted}",
+        "text.inverse": "{palette.neutral.textOnDark}",
+        "chart.progress": "{palette.accent.periwinkle}",
+        "chart.track": "{palette.neutral.surface100}",
+        "category.entertainment.bg": "{palette.accent.periwinkleSoft}",
+        "category.transfers.bg": "{palette.accent.roseSoft}",
+        "promo.bg": "{palette.accent.peach}"
+      }
+    },
+
+    "typography": {
+      "fontFamily": {
+        "primary": "'Montserrat', 'Inter', 'Helvetica Neue', Arial, sans-serif",
+        "cardNumber": "'Roboto', 'Montserrat', sans-serif",
+        "note": "Montserrat (sans geométrica) é a fonte dominante. O número do cartão e o texto 'Card Platinum' lembram Roboto."
+      },
+      "weights": { "light": 300, "regular": 400, "medium": 500, "semibold": 600, "bold": 700 },
+      "scale": {
+        "logo": { "size": 26, "lineHeight": 32, "weight": 300, "letterSpacing": "0.5px", "color": "#FFFFFF", "usage": "Texto 'Logo' no topo da sidebar" },
+        "pageTitle": { "size": 16, "lineHeight": 22, "weight": 500, "color": "{text.primary}", "usage": "'Dashboard'" },
+        "sectionTitle": { "size": 14, "lineHeight": 20, "weight": 500, "color": "{text.primary}", "usage": "'Дополнительная навигация', 'Последние операции'" },
+        "statValue": { "size": 15, "lineHeight": 20, "weight": 500, "color": "{text.primary}", "usage": "Valores: 100 000₽, 15 000₽, 10 000₽, 25 000₽" },
+        "statValueLarge": { "size": 17, "lineHeight": 24, "weight": 500, "color": "{text.primary}", "usage": "Valor central do donut (85 000₽)" },
+        "body": { "size": 12, "lineHeight": 18, "weight": 400, "color": "{text.primary}", "usage": "Nomes de lojas, labels dos mini-cards, valores da lista" },
+        "bodyMedium": { "size": 12, "lineHeight": 18, "weight": 500, "color": "{text.primary}", "usage": "Valores monetários da lista (-89 ₽)" },
+        "caption": { "size": 10, "lineHeight": 14, "weight": 400, "color": "{text.muted}", "usage": "Datas, 'Потрачено', 'Лимит', 'Остаток', 'N операций'" },
+        "captionTiny": { "size": 9, "lineHeight": 12, "weight": 400, "color": "{text.muted}", "usage": "Texto auxiliar do banner promocional e do cartão" },
+        "footerBrand": { "size": 11, "lineHeight": 14, "weight": 400, "color": "#9A9A9A", "usage": "'Chudobank' no rodapé da sidebar" },
+        "footerLegal": { "size": 8, "lineHeight": 11, "weight": 400, "color": "#7A7A7A", "usage": "'Все права защищены'" },
+        "promoTitle": { "size": 15, "lineHeight": 21, "weight": 500, "color": "{text.primary}", "usage": "'Доходный вклад при 10% годовых'" },
+        "cardNumber": { "size": 15, "lineHeight": 20, "weight": 400, "letterSpacing": "0.8px", "color": "#FFFFFF", "fontFamily": "cardNumber", "usage": "4562 1122 4595 7852" },
+        "cardHolder": { "size": 11, "lineHeight": 14, "weight": 400, "letterSpacing": "0.4px", "textTransform": "uppercase", "color": "#FFFFFF", "usage": "DENIS MELKISHEV" },
+        "cardLabel": { "size": 9, "lineHeight": 12, "weight": 400, "color": "{palette.neutral.textOnDarkMuted}", "usage": "'Card Platinum', 'world'" },
+        "searchPlaceholder": { "size": 11, "lineHeight": 16, "weight": 400, "color": "#A8A8A8", "usage": "'Поиск'" }
+      },
+      "rules": [
+        "Datas e rótulos usam cinza muito claro com tamanho entre 9 e 10px.",
+        "Valores monetários usam espaço fino entre milhares e o símbolo ₽ colado ao número (100 000₽) nos cards de resumo; na lista há espaço antes do símbolo (-89 ₽).",
+        "Texto do cartão bancário em caixa alta apenas para o nome do titular."
+      ]
+    },
+
+    "spacing": {
+      "base": 4,
+      "scale": { "xs": 4, "sm": 8, "md": 12, "lg": 16, "xl": 24, "2xl": 32, "3xl": 48 },
+      "layoutSpecific": {
+        "sidebarWidth": 133,
+        "contentPaddingX": 49,
+        "contentPaddingTop": 38,
+        "columnGap": 24,
+        "sectionGap": 36,
+        "cardInnerPadding": 18,
+        "listRowHeight": 68,
+        "miniCardGap": 25,
+        "rightPanelPadding": 37
+      }
+    },
+
+    "radius": {
+      "none": 0,
+      "sm": 8,
+      "md": 14,
+      "lg": 20,
+      "xl": 24,
+      "shell": 52,
+      "pill": 999,
+      "usage": {
+        "contentSurface": "52px (todos os cantos exceto a junção com a sidebar)",
+        "bankCard": 20,
+        "miniCard": 20,
+        "rightPanel": 24,
+        "categoryCard": 14,
+        "promoBanner": 16,
+        "searchField": 999,
+        "avatar": 999,
+        "brandLogo": 999
+      }
+    },
+
+    "borders": {
+      "hairline": { "width": 1, "color": "{border.default}" },
+      "divider": { "width": 1, "color": "{border.divider}" },
+      "note": "Cards claros usam 1px #E8E8E8; o cartão escuro e o banner pêssego não possuem borda."
+    },
+
+    "elevation": {
+      "none": "none",
+      "subtle": "0 1px 2px rgba(0,0,0,0.04)",
+      "illustration": "0 8px 20px rgba(255,138,91,0.18)",
+      "note": "O design é essencialmente flat. Profundidade vem do contraste entre moldura escura e superfície branca, não de sombras."
+    },
+
+    "iconography": {
+      "style": "Outline (linha), traço fino",
+      "strokeWidth": 1.5,
+      "grid": 24,
+      "sizes": { "sm": 16, "md": 20, "lg": 24, "xl": 40 },
+      "colors": {
+        "sidebarInactive": "#8C8C8C",
+        "sidebarActive": "#2B2B2B",
+        "topbar": "#9A9A9A",
+        "kebab": "#C8C8C8",
+        "miniCardHero": "#2B2B2B"
+      },
+      "set": [
+        { "name": "home", "usage": "Sidebar (ativo, preenchido)" },
+        { "name": "mail", "usage": "Sidebar" },
+        { "name": "chat-bubble", "usage": "Sidebar" },
+        { "name": "wallet", "usage": "Sidebar" },
+        { "name": "settings-gear", "usage": "Sidebar" },
+        { "name": "logout-arrow", "usage": "Sidebar (último item)" },
+        { "name": "search", "usage": "Campo de busca" },
+        { "name": "calendar-check", "usage": "Topbar" },
+        { "name": "bell", "usage": "Topbar com badge" },
+        { "name": "grid-2x2", "usage": "Mini-card 'Все сервисы банка' (40px, traço 2px)" },
+        { "name": "credit-card", "usage": "Mini-card 'Новое: раздел Кошелёк' (40px, traço 2px)" },
+        { "name": "kebab-vertical", "usage": "Menu de contexto (3 pontos verticais)" },
+        { "name": "chevron-right", "usage": "'Все >'" },
+        { "name": "chip-contactless", "usage": "Cartão bancário" }
+      ]
+    },
+
+    "motion": {
+      "duration": { "fast": 120, "base": 200, "slow": 400, "chart": 800 },
+      "easing": { "standard": "cubic-bezier(0.2, 0, 0, 1)", "emphasized": "cubic-bezier(0.3, 0, 0, 1.2)" },
+      "suggestions": [
+        "Hover em linhas da lista: fundo #FAFAFA, 120ms.",
+        "Donut: animar stroke-dashoffset de 0 até 85% em 800ms ease-out.",
+        "Troca de aba ativa na sidebar: translate + fade da forma branca em 200ms.",
+        "Cards: elevar 2px e adicionar sombra sutil no hover."
+      ]
+    }
+  },
+
+  "layout": {
+    "structure": "Shell escuro com 3 zonas: sidebar vertical (esquerda), topbar (topo) e superfície de conteúdo branca arredondada que abriga 2 colunas.",
+    "shell": {
+      "background": "{bg.app}",
+      "padding": { "top": 68, "right": 38, "bottom": 25, "left": 0 }
+    },
+    "regions": {
+      "sidebar": {
+        "x": 0, "width": 133, "background": "transparent (usa cor do shell)",
+        "logo": { "x": 38, "y": 28 },
+        "navigationStartY": 117,
+        "navItemSize": { "width": 133, "height": 54 },
+        "navItemSpacing": 2,
+        "iconCenterX": 71,
+        "footer": { "x": 38, "bottom": 28 }
+      },
+      "topbar": {
+        "height": 68,
+        "searchField": { "x": 182, "y": 25, "width": 254, "height": 30 },
+        "rightActions": { "alignRight": 38, "gap": 28, "items": ["calendar-check", "bell", "avatar"] },
+        "avatar": { "size": 38, "statusDot": 8 }
+      },
+      "contentSurface": {
+        "x": 133, "y": 68, "width": 1029, "height": 657,
+        "background": "{bg.surface}",
+        "radius": "52px nos cantos (esquerdo superior e inferior direito, direito superior); a lateral esquerda se conecta à aba ativa da sidebar"
+      }
+    },
+    "contentGrid": {
+      "columns": 2,
+      "left": { "x": 182, "width": 556, "contains": ["Dashboard title", "Card + mini-cards", "Lista de operações"] },
+      "right": { "x": 763, "width": 350, "contains": ["Painel de gastos", "Banner promocional"] },
+      "gap": 25
+    },
+    "responsive": {
+      "breakpoints": { "mobile": 0, "tablet": 768, "desktop": 1024, "wide": 1440 },
+      "behavior": {
+        "wide": "Layout atual escalado proporcionalmente, max-width do conteúdo ~1440px.",
+        "desktop": "Duas colunas como no mockup.",
+        "tablet": "Sidebar vira rail de ícones (72px); coluna direita desce abaixo da esquerda.",
+        "mobile": "Sidebar vira bottom nav; moldura escura é removida, superfície branca ocupa 100%; cards em coluna única; mini-cards em scroll horizontal."
+      }
+    }
+  },
+
+  "components": {
+    "sidebarNav": {
+      "description": "Navegação vertical por ícones. O item ativo é uma aba branca que se funde com a superfície de conteúdo.",
+      "item": {
+        "size": { "width": 133, "height": 54 },
+        "default": { "iconColor": "#8C8C8C", "background": "transparent" },
+        "hover": { "iconColor": "#FFFFFF" },
+        "active": {
+          "background": "#FFFFFF",
+          "iconColor": "#2B2B2B",
+          "radius": "27px 0 0 27px",
+          "width": "95px (de x=38 até 133)",
+          "joinDetail": "Curva côncava invertida (raio ~20px) acima e abaixo da aba para criar a sensação de recorte contínuo com a superfície branca."
+        }
+      },
+      "items": ["home", "mail", "chat", "wallet", "settings", "logout"]
+    },
+
+    "searchField": {
+      "background": "#FFFFFF",
+      "height": 30,
+      "width": 254,
+      "radius": 999,
+      "paddingX": 14,
+      "border": "none",
+      "placeholder": { "text": "Поиск", "style": "searchPlaceholder" },
+      "icon": { "name": "search", "size": 16, "color": "#9A9A9A", "position": "right" },
+      "states": {
+        "focus": "Anel de 2px rgba(169,185,255,0.6)",
+        "hover": "Sem mudança de fundo; ícone escurece para #6B6B6B"
+      }
+    },
+
+    "topbarIconButton": {
+      "size": 24,
+      "color": "#9A9A9A",
+      "hover": "#FFFFFF",
+      "badge": { "size": 7, "color": "{palette.status.notification}", "position": "top-right (-2px, -2px)" }
+    },
+
+    "avatar": {
+      "size": 38,
+      "shape": "circle",
+      "statusIndicator": { "size": 8, "color": "{palette.status.online}", "border": "1.5px solid #343434", "position": "bottom-right" }
+    },
+
+    "bankCard": {
+      "description": "Cartão bancário escuro com chip, contactless e bandeiras.",
+      "size": { "width": 255, "height": 157 },
+      "background": "{bg.card.dark}",
+      "radius": 20,
+      "padding": 18,
+      "elements": {
+        "chip": { "position": "top-left", "size": 24, "color": "#FFFFFF", "style": "outline" },
+        "contactless": { "position": "next to chip", "size": 14, "color": "#FFFFFF" },
+        "paymentSystemLabel": { "text": "world", "position": "top-right", "style": "cardLabel" },
+        "number": { "position": "y≈217 (meio-esquerda)", "style": "cardNumber" },
+        "tierLabel": { "text": "Card Platinum", "position": "bottom-left (linha superior)", "style": "cardLabel" },
+        "holder": { "text": "DENIS MELKISHEV", "position": "bottom-left (linha inferior)", "style": "cardHolder" },
+        "network": {
+          "mastercard": { "position": "bottom-right (superior)", "size": 38, "colors": ["#EB001B", "#F79E1B"], "overlap": "Dois círculos sobrepostos" },
+          "visa": { "position": "bottom-right (inferior)", "color": "#FFFFFF", "weight": "bold italic", "size": 14 }
+        }
+      }
+    },
+
+    "miniNavCard": {
+      "description": "Card de atalho com ícone grande, rótulo curto e menu de contexto.",
+      "size": { "width": 125, "height": 157 },
+      "background": "{bg.card}",
+      "border": "1px solid {border.default}",
+      "radius": 20,
+      "padding": 18,
+      "icon": { "size": 40, "strokeWidth": 2, "color": "#2B2B2B", "position": "top-left" },
+      "menu": { "icon": "kebab-vertical", "color": "#C8C8C8", "position": "top-right" },
+      "label": { "style": "body", "lineHeight": 18, "position": "bottom-left", "maxLines": 3 },
+      "examples": ["Все сервисы банка", "Новое: раздел Кошелёк"],
+      "states": {
+        "hover": "Fundo #FFFFFF + sombra subtle",
+        "pressed": "Fundo #F3F3F3"
+      }
+    },
+
+    "sectionHeader": {
+      "title": { "style": "sectionTitle" },
+      "action": { "text": "Все", "suffix": ">", "style": "caption", "color": "{text.muted}", "position": "right" },
+      "marginBottom": 16
+    },
+
+    "transactionList": {
+      "description": "Lista de operações recentes com linhas separadas por divisória.",
+      "rowHeight": 68,
+      "columns": [
+        { "name": "merchant", "x": 0, "content": "logo circular 26px + nome (body)" },
+        { "name": "date", "x": 238, "content": "caption" },
+        { "name": "amount", "x": 432, "content": "bodyMedium, alinhado à esquerda da coluna" },
+        { "name": "menu", "x": 553, "content": "kebab-vertical cinza claro" }
+      ],
+      "divider": "1px solid {border.divider}",
+      "lastRowDivider": false,
+      "logo": { "size": 26, "shape": "circle", "gap": 10 },
+      "amountFormat": "-89 ₽ (sinal de menos, espaço, símbolo)",
+      "dateFormat": "13 мая, 15:37",
+      "states": {
+        "hover": "Fundo #FAFAFA com radius 12",
+        "selected": "Borda esquerda 2px periwinkle"
+      },
+      "sampleData": [
+        { "merchant": "Пятёрочка", "date": "13 мая, 15:37", "amount": "-89 ₽", "logoBg": "#E31E24" },
+        { "merchant": "Tele2", "date": "13 мая, 18:40", "amount": "-300 ₽", "logoBg": "#1E1E2D" },
+        { "merchant": "Mosmetro", "date": "12 мая, 12:30", "amount": "-54 ₽", "logoBg": "#E2231A" },
+        { "merchant": "Макдоналдс", "date": "11 мая, 13:02", "amount": "-499 ₽", "logoBg": "#FFC300" },
+        { "merchant": "MGTS", "date": "10 мая, 13:47", "amount": "-490 ₽", "logoBg": "#0A7DD6" }
+      ]
+    },
+
+    "spendingPanel": {
+      "description": "Painel lateral com donut de gastos, limite/saldo e categorias.",
+      "size": { "width": 350, "height": 432 },
+      "background": "{bg.card}",
+      "border": "1px solid {border.default}",
+      "radius": 24,
+      "padding": 37,
+      "donut": {
+        "diameter": 136,
+        "strokeWidth": 12,
+        "strokeLinecap": "round",
+        "progressColor": "{chart.progress}",
+        "trackColor": "{chart.track}",
+        "startAngle": "-90deg (topo)",
+        "progressPercent": 85,
+        "gapAtEnd": "Pequena abertura no topo-direita entre início e fim do arco",
+        "center": {
+          "label": { "text": "Потрачено", "style": "caption" },
+          "value": { "text": "85 000₽", "style": "statValueLarge" }
+        }
+      },
+      "limitRow": {
+        "marginTop": 32,
+        "left": { "label": "Лимит", "value": "100 000₽" },
+        "right": { "label": "Остаток", "value": "15 000₽", "align": "right" },
+        "labelStyle": "captionTiny",
+        "valueStyle": "statValue"
+      },
+      "categoryCards": {
+        "gap": 12,
+        "marginTop": 24
+      }
+    },
+
+    "categoryCard": {
+      "size": { "width": 275, "height": 62 },
+      "radius": 14,
+      "padding": { "x": 18, "y": 12 },
+      "layout": "Duas linhas à esquerda (rótulo + valor) e contador de operações à direita, centralizado verticalmente",
+      "label": { "style": "captionTiny", "color": "{text.muted}" },
+      "value": { "style": "statValue" },
+      "count": { "style": "caption", "align": "right", "color": "{text.muted}" },
+      "variants": {
+        "entertainment": { "background": "{category.entertainment.bg}", "example": { "label": "Развлечения", "value": "10 000₽", "count": "8 операций" } },
+        "transfers": { "background": "{category.transfers.bg}", "example": { "label": "Переводы", "value": "25 000₽", "count": "2 операции" } }
+      },
+      "states": {
+        "hover": "Escurecer fundo 3%",
+        "pressed": "Escurecer fundo 6%"
+      }
+    },
+
+    "promoBanner": {
+      "description": "Banner promocional com ilustração 3D que extrapola o contêiner pelo topo.",
+      "size": { "width": 350, "height": 111 },
+      "background": "{promo.bg}",
+      "radius": 16,
+      "padding": { "left": 30, "top": 24 },
+      "title": { "text": "Доходный вклад при 10% годовых", "style": "promoTitle", "maxWidth": 150 },
+      "subtitle": { "text": "Ежемесячная выплата процентов на карту", "style": "captionTiny", "color": "#9A8574", "maxWidth": 130, "marginTop": 12 },
+      "illustration": {
+        "type": "3D render",
+        "subject": "Pessoa sentada sobre um foguete com nuvens fofas",
+        "position": "right, sobrepondo a borda superior do banner em ~25px",
+        "width": 150,
+        "overflow": "visible",
+        "palette": ["#FF8A5B", "#FFFFFF", "#F7DDE0", "#FFD8BC"]
+      }
+    },
+
+    "sidebarFooter": {
+      "brand": { "text": "Chudobank", "style": "footerBrand" },
+      "legal": { "text": "Все права защищены", "style": "footerLegal" },
+      "position": "bottom-left, alinhado com o logo (x=38)"
+    },
+
+    "kebabMenu": {
+      "icon": "3 pontos verticais",
+      "dotSize": 3,
+      "gap": 3,
+      "color": "#C8C8C8",
+      "hitArea": 24,
+      "hover": { "color": "#8C8C8C", "background": "#F3F3F3", "radius": 999 }
+    },
+
+    "brandLogoBadge": {
+      "size": 26,
+      "shape": "circle",
+      "note": "Logos de comerciantes sempre em círculo, com a cor da marca preenchendo o círculo e o símbolo em branco/contraste."
+    }
+  },
+
+  "patterns": {
+    "dashboardComposition": [
+      "Título da página seguido de uma faixa horizontal com cartão bancário (destaque escuro) + 2 mini-cards claros.",
+      "Abaixo, seção 'Últimas operações' ocupando toda a largura da coluna esquerda.",
+      "Coluna direita com painel de métricas e CTA promocional empilhados com 38px de espaço entre eles."
+    ],
+    "colorUsage": {
+      "ratio": "≈ 55% branco/cinza claro, 30% escuro (moldura + cartão), 10% pastel, 5% cores de marca",
+      "rule": "Cor saturada só aparece em logos de marca; o sistema usa pastéis para categorias e CTAs."
+    },
+    "moneyFormatting": {
+      "locale": "ru-RU",
+      "thousandsSeparator": "espaço (U+00A0)",
+      "currencySymbol": "₽",
+      "negativeSign": "- (hífen-menos) sem cor vermelha"
+    },
+    "emptyState": {
+      "suggestion": "Ilustração 3D no estilo do banner + texto body centralizado + botão pill escuro."
+    }
+  },
+
+  "accessibility": {
+    "contrast": {
+      "textPrimaryOnWhite": "≈ 13:1 (AAA)",
+      "textMutedOnWhite": "≈ 2:1 — abaixo de AA; recomendado escurecer para #8A8A8A (≈ 3.5:1) ou #767676 (4.5:1) em implementação real",
+      "whiteOnShell": "≈ 12:1 (AAA)",
+      "iconInactiveOnShell": "≈ 4.3:1"
+    },
+    "recommendations": [
+      "Tamanho mínimo de texto recomendado: 12px; elevar caption/captionTiny de 9–10px para 11–12px em produção.",
+      "Área de toque mínima de 44x44px para kebab menus e ícones da topbar.",
+      "Não depender apenas de cor para diferenciar categorias; manter rótulos de texto.",
+      "Adicionar aria-label aos botões somente com ícone (sidebar, sino, calendário, menu de contexto).",
+      "O donut deve ter equivalente textual (role='img' + aria-label='Gasto de 85 000 ₽ de 100 000 ₽').",
+      "Foco visível: outline 2px #A9B9FF com offset 2px."
+    ]
+  },
+
+  "tokens": {
+    "css": {
+      ":root": {
+        "--color-shell": "#343434",
+        "--color-white": "#FFFFFF",
+        "--color-surface-50": "#FAFAFA",
+        "--color-surface-100": "#F3F3F3",
+        "--color-border": "#E8E8E8",
+        "--color-divider": "#E4E4E4",
+        "--color-text-primary": "#2B2B2B",
+        "--color-text-secondary": "#6B6B6B",
+        "--color-text-muted": "#B5B5B5",
+        "--color-periwinkle": "#A9B9FF",
+        "--color-periwinkle-soft": "#EAEEFF",
+        "--color-rose-soft": "#FFECEC",
+        "--color-peach": "#FFD8BC",
+        "--color-online": "#4CD964",
+        "--color-notification": "#FFA928",
+        "--font-primary": "'Montserrat', 'Inter', Arial, sans-serif",
+        "--radius-sm": "8px",
+        "--radius-md": "14px",
+        "--radius-lg": "20px",
+        "--radius-xl": "24px",
+        "--radius-shell": "52px",
+        "--radius-pill": "999px",
+        "--space-1": "4px",
+        "--space-2": "8px",
+        "--space-3": "12px",
+        "--space-4": "16px",
+        "--space-6": "24px",
+        "--space-8": "32px",
+        "--sidebar-width": "133px",
+        "--list-row-height": "68px"
+      }
+    },
+    "tailwindExtend": {
+      "colors": {
+        "shell": "#343434",
+        "surface": { "50": "#FAFAFA", "100": "#F3F3F3" },
+        "line": "#E8E8E8",
+        "ink": { "DEFAULT": "#2B2B2B", "soft": "#6B6B6B", "muted": "#B5B5B5" },
+        "periwinkle": { "DEFAULT": "#A9B9FF", "soft": "#EAEEFF" },
+        "rose": { "soft": "#FFECEC" },
+        "peach": "#FFD8BC"
+      },
+      "borderRadius": { "card": "20px", "panel": "24px", "shell": "52px" },
+      "fontFamily": { "sans": ["Montserrat", "Inter", "Arial", "sans-serif"] }
+    }
+  },
+
+  "implementationNotes": [
+    "A junção côncava entre a aba ativa da sidebar e a superfície branca pode ser feita com pseudo-elementos (::before/::after) com radial-gradient ou box-shadow de 20px 20px 0 #FFF.",
+    "O donut é melhor implementado em SVG com <circle> + stroke-dasharray/stroke-dashoffset.",
+    "A ilustração do banner deve ser PNG/WebP com fundo transparente, posicionada com position:absolute e overflow:visible no contêiner.",
+    "Logos de marcas devem ser SVG dentro de círculos de 26px com overflow hidden.",
+    "Usar CSS Grid para as duas colunas (grid-template-columns: 556px 350px) e Flexbox nas linhas internas."
+  ]
+}

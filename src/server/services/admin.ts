@@ -1,4 +1,4 @@
-import { prisma, type CheckinMode } from "@/lib/prisma";
+import { prisma, Prisma, type CheckinMode } from "@/lib/prisma";
 import { ApiError } from "@/server/http";
 import { formatSerial, newVerificationCode, signTicketToken } from "@/server/security/tokens";
 import { audit } from "@/server/services/audit";
@@ -22,7 +22,17 @@ export async function getDashboardStats() {
   });
 
   return {
-    event: event ? { id: event.id, name: event.name, checkinMode: event.checkinMode } : null,
+    event: event
+      ? {
+          id: event.id,
+          name: event.name,
+          checkinMode: event.checkinMode,
+          startsAt: event.startsAt.toISOString(),
+          checkinOpensAt: event.checkinOpensAt.toISOString(),
+          checkinClosesAt: event.checkinClosesAt.toISOString(),
+          timezone: event.timezone,
+        }
+      : null,
     stats: {
       totalTickets,
       claimedTickets,
@@ -39,6 +49,105 @@ export async function getDashboardStats() {
       issuedAt: c.issuedAt.toISOString(),
     })),
   };
+}
+
+export async function updateEventConfig(args: {
+  checkinMode?: CheckinMode;
+  startsAt?: Date;
+  checkinOpensAt?: Date;
+  checkinClosesAt?: Date;
+  adminEmail: string;
+}) {
+  const event = await prisma.event.findFirst({ orderBy: { startsAt: "desc" } });
+  if (!event) throw new ApiError(404, "NOT_FOUND", "Evento não encontrado.");
+
+  const dataToUpdate: {
+    checkinMode?: CheckinMode;
+    startsAt?: Date;
+    checkinOpensAt?: Date;
+    checkinClosesAt?: Date;
+  } = {};
+
+  if (args.checkinMode) dataToUpdate.checkinMode = args.checkinMode;
+  if (args.startsAt) dataToUpdate.startsAt = args.startsAt;
+  if (args.checkinOpensAt) dataToUpdate.checkinOpensAt = args.checkinOpensAt;
+  if (args.checkinClosesAt) dataToUpdate.checkinClosesAt = args.checkinClosesAt;
+
+  const updated = await prisma.event.update({
+    where: { id: event.id },
+    data: dataToUpdate,
+  });
+
+  await audit({
+    actor: args.adminEmail,
+    action: "EVENT_CONFIG_UPDATED",
+    entity: "Event",
+    entityId: event.id,
+    details: dataToUpdate as Prisma.InputJsonObject,
+  });
+
+  return updated;
+}
+
+export async function createManualTicket(adminEmail: string) {
+  const event = await prisma.event.findFirst({ orderBy: { startsAt: "desc" } });
+  if (!event) throw new ApiError(404, "NOT_FOUND", "Evento não encontrado.");
+
+  const ticket = await prisma.ticket.create({
+    data: {
+      eventId: event.id,
+      userAgent: "Criado manualmente no painel admin",
+    },
+  });
+
+  const token = signTicketToken(ticket.id, ticket.qrVersion);
+
+  await audit({
+    actor: adminEmail,
+    action: "TICKET_CREATED_MANUALLY",
+    entity: "Ticket",
+    entityId: ticket.id,
+    details: { token },
+  });
+
+  return { ticket, token };
+}
+
+export async function generateCertificatesCsv(): Promise<string> {
+  const certificates = await prisma.certificate.findMany({
+    orderBy: { issuedAt: "desc" },
+    include: { event: true },
+  });
+
+  const headers = ["Série", "Nome Completo", "Código de Verificação", "Estado", "Data de Emissão", "Evento"];
+  const rows = certificates.map((c) => [
+    formatSerial(c.serial),
+    `"${c.fullName.replace(/"/g, '""')}"`,
+    c.verificationCode,
+    c.status === "VALID" ? "Válido" : "Revogado",
+    c.issuedAt.toISOString(),
+    `"${c.event.name.replace(/"/g, '""')}"`,
+  ]);
+
+  const csvContent = [headers.join(","), ...rows.map((r) => r.join(","))].join("\r\n");
+  // Adicionar UTF-8 BOM para garantir acentuação correta no Excel
+  return "\uFEFF" + csvContent;
+}
+
+export async function listAuditLogs(limit: number = 20) {
+  const logs = await prisma.auditLog.findMany({
+    take: limit,
+    orderBy: { createdAt: "desc" },
+  });
+  return logs.map((l) => ({
+    id: l.id,
+    actor: l.actor,
+    action: l.action,
+    entity: l.entity,
+    entityId: l.entityId,
+    details: l.details,
+    createdAt: l.createdAt.toISOString(),
+  }));
 }
 
 export async function listAdminCertificates(params: { search?: string; page?: number; limit?: number }) {
@@ -141,7 +250,7 @@ export async function regenerateCertificate(certId: string, adminEmail: string) 
   return updated;
 }
 
-export async function listAdminTickets(params: { search?: string; page?: number; limit?: number }) {
+export async function listAdminTickets(params: { page?: number; limit?: number }) {
   const page = Math.max(1, params.page || 1);
   const limit = Math.min(100, Math.max(10, params.limit || 20));
   const skip = (page - 1) * limit;
@@ -193,7 +302,6 @@ export async function handleTicketAction(ticketId: string, action: "REGENERATE_Q
     return { ticket: updated };
   }
 
-  // REGENERATE_QR: Incrementa a versão do QR Code e liberta a associação com o dispositivo antigo
   const updated = await prisma.ticket.update({
     where: { id: ticketId },
     data: {
@@ -214,21 +322,5 @@ export async function handleTicketAction(ticketId: string, action: "REGENERATE_Q
 }
 
 export async function setCheckinMode(mode: CheckinMode, adminEmail: string) {
-  const event = await prisma.event.findFirst({ orderBy: { startsAt: "desc" } });
-  if (!event) throw new ApiError(404, "NOT_FOUND", "Evento não encontrado.");
-
-  const updated = await prisma.event.update({
-    where: { id: event.id },
-    data: { checkinMode: mode },
-  });
-
-  await audit({
-    actor: adminEmail,
-    action: "CHECKIN_MODE_CHANGED",
-    entity: "Event",
-    entityId: event.id,
-    details: { oldMode: event.checkinMode, newMode: mode },
-  });
-
-  return updated;
+  return updateEventConfig({ checkinMode: mode, adminEmail });
 }
