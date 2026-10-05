@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminHeader from "@/components/admin/AdminHeader";
+import AdminBottomNav from "@/components/admin/AdminBottomNav";
 
 type AdminUser = { id: string; name: string; email: string };
 type DashboardData = { event: { checkinMode: "AUTO" | "OPEN" | "CLOSED" } | null };
@@ -75,7 +76,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const title = PAGE_TITLES[pathname] || "Painel de Administração";
 
   return (
-    <div className="min-h-screen bg-primary-dark p-2 sm:p-4 md:p-5 lg:p-6 flex flex-col lg:flex-row gap-4 font-sans text-text antialiased">
+    <div className="min-h-screen bg-primary-dark p-2 sm:p-4 md:p-5 lg:p-6 flex flex-col lg:flex-row gap-4 font-sans text-text antialiased pb-16 lg:pb-0">
       {/* Sidebar Persistente do Shell Escuro */}
       <AdminSidebar
         isOpen={mobileSidebarOpen}
@@ -91,11 +92,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           checkinMode={eventData?.event?.checkinMode}
         />
 
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto bg-background-soft/40">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto bg-background-soft/40 pb-20 lg:pb-8">
           {children}
         </main>
       </div>
+
+      {/* Tab Bar Inferior para Dispositivos Móveis */}
+      <AdminBottomNav />
     </div>
   );
 }
+
 
