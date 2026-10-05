@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Calendar, Loader2, Sparkles, Zap, Lock, Unlock, RefreshCw } from "lucide-react";
+import { Calendar, Loader2, Zap, Lock, Unlock, RefreshCw, Sliders } from "lucide-react";
 import Button from "@/components/ui/Button";
 
 type DashboardData = {
@@ -124,12 +124,15 @@ export default function AdminConfiguracoesPage() {
     );
   }
 
+  const currentMode = data?.event?.checkinMode || "AUTO";
+
   return (
-    <div className="max-w-3xl mx-auto space-y-8">
+    <div className="space-y-6 max-w-5xl mx-auto font-sans text-text pb-6">
+      
       {/* Mensagem de Notificação */}
       {message && (
         <div
-          className={`p-4 rounded-2xl text-xs font-bold border transition-all ${
+          className={`p-4 rounded-md text-xs font-bold border transition-all ${
             message.type === "success"
               ? "bg-emerald-50 border-emerald-200 text-emerald-800"
               : "bg-rose-50 border-rose-200 text-rose-800"
@@ -139,122 +142,150 @@ export default function AdminConfiguracoesPage() {
         </div>
       )}
 
-      {/* Seção 1: Atalhos Rápidos */}
-      <div className="bg-white p-6 sm:p-8 rounded-[28px] shadow-xs border border-border/80 space-y-5">
+      {/* Cabeçalho da Página Consistente */}
+      <div className="bg-white p-6 sm:p-8 rounded-[24px] shadow-xs border border-border/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-heading font-extrabold uppercase bg-gold/15 text-primary border border-gold/30 mb-2">
-            <Sparkles size={12} className="text-gold" /> Controlo Dinâmico
-          </span>
-          <h2 className="font-heading font-black text-xl text-primary-dark tracking-tight">
-            Atalhos Rápidos de Liberação
+          <h2 className="font-heading font-black text-lg text-primary-dark tracking-tight">
+            Configurações do Evento
           </h2>
-          <p className="text-xs text-text-muted mt-1">
-            Escolha quando e como os participantes podem emitir certificados.
+          <p className="text-xs text-text-muted mt-0.5">
+            Gerencie as datas oficiais, janela de liberação e modo de credenciamento dos participantes.
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-2.5 pt-1">
-          <Button
-            size="sm"
-            onClick={handlePresetToday}
-            disabled={actionLoading === "dates"}
-            className="rounded-full font-bold uppercase text-[11px] bg-primary hover:bg-primary-hover shadow-xs"
-            leftIcon={<Zap size={14} className="text-gold" />}
-          >
-            Liberar Credenciamento Hoje
-          </Button>
-
-          <Button
-            size="sm"
-            variant={data?.event?.checkinMode === "OPEN" ? "primary" : "outline"}
-            onClick={() => handleModeChange("OPEN")}
-            disabled={actionLoading === "mode"}
-            className="rounded-full font-bold uppercase text-[11px]"
-            leftIcon={<Unlock size={14} />}
-          >
-            Forçar Aberto (Override)
-          </Button>
-
-          <Button
-            size="sm"
-            variant={data?.event?.checkinMode === "CLOSED" ? "primary" : "outline"}
-            onClick={() => handleModeChange("CLOSED")}
-            disabled={actionLoading === "mode"}
-            className="rounded-full font-bold uppercase text-[11px]"
-            leftIcon={<Lock size={14} />}
-          >
-            Forçar Fechado
-          </Button>
-
-          <Button
-            size="sm"
-            variant={data?.event?.checkinMode === "AUTO" ? "secondary" : "ghost"}
-            onClick={() => handleModeChange("AUTO")}
-            disabled={actionLoading === "mode"}
-            className="rounded-full font-bold uppercase text-[11px]"
-            leftIcon={<RefreshCw size={14} />}
-          >
-            Modo Automático por Data
-          </Button>
+        <div className="flex items-center gap-2">
+          <span className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-md font-heading font-bold text-[11px] uppercase border ${
+            currentMode === "OPEN"
+              ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+              : currentMode === "CLOSED"
+              ? "bg-rose-50 text-rose-800 border-rose-200"
+              : "bg-gold/15 text-primary border-gold/30"
+          }`}>
+            <span className={`w-2 h-2 rounded-full ${
+              currentMode === "OPEN" ? "bg-emerald-500 animate-pulse" : currentMode === "CLOSED" ? "bg-rose-500" : "bg-gold"
+            }`} />
+            Modo Atual: {currentMode}
+          </span>
         </div>
       </div>
 
-      {/* Seção 2: Datas Customizadas */}
-      <div className="bg-white p-6 sm:p-8 rounded-[28px] shadow-xs border border-border/80">
-        <div className="flex items-center gap-2.5 mb-5 text-primary">
-          <div className="w-9 h-9 rounded-2xl bg-surface-warm flex items-center justify-center text-primary">
-            <Calendar size={18} />
-          </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        {/* Seção 1: Controlo Dinâmico & Modos */}
+        <div className="lg:col-span-12 bg-white p-6 sm:p-8 rounded-[24px] shadow-xs border border-border/80 space-y-6">
           <div>
-            <h2 className="font-heading font-black text-lg text-primary-dark tracking-tight">
-              Janela de Datas Customizada
-            </h2>
-            <p className="text-[11px] text-text-muted">
-              Defina o período exato em que a emissão pública ficará disponível.
+            <h3 className="font-heading font-bold text-sm text-primary-dark flex items-center gap-2 border-b border-border/60 pb-3">
+              <Sliders size={18} className="text-gold" /> Controlo Dinâmico de Liberação
+            </h3>
+            <p className="text-xs text-text-muted mt-2">
+              Selecione o modo de emissão pública de certificados ou utilize um atalho rápido de liberação.
             </p>
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            <Button
+              size="sm"
+              onClick={handlePresetToday}
+              disabled={actionLoading === "dates"}
+              className="rounded-md font-bold uppercase text-[11px] bg-primary hover:bg-primary-hover shadow-xs"
+              leftIcon={<Zap size={14} className="text-gold" />}
+            >
+              Liberar Credenciamento Hoje
+            </Button>
+
+            <Button
+              size="sm"
+              variant={currentMode === "OPEN" ? "primary" : "outline"}
+              onClick={() => handleModeChange("OPEN")}
+              disabled={actionLoading === "mode"}
+              className="rounded-md font-bold uppercase text-[11px] border-border"
+              leftIcon={<Unlock size={14} />}
+            >
+              Forçar Aberto (Override)
+            </Button>
+
+            <Button
+              size="sm"
+              variant={currentMode === "CLOSED" ? "primary" : "outline"}
+              onClick={() => handleModeChange("CLOSED")}
+              disabled={actionLoading === "mode"}
+              className="rounded-md font-bold uppercase text-[11px] border-border"
+              leftIcon={<Lock size={14} />}
+            >
+              Forçar Fechado
+            </Button>
+
+            <Button
+              size="sm"
+              variant={currentMode === "AUTO" ? "secondary" : "ghost"}
+              onClick={() => handleModeChange("AUTO")}
+              disabled={actionLoading === "mode"}
+              className="rounded-md font-bold uppercase text-[11px]"
+              leftIcon={<RefreshCw size={14} />}
+            >
+              Modo Automático por Data
+            </Button>
           </div>
         </div>
 
-        <form onSubmit={handleSaveDates} className="space-y-4">
-          <div>
-            <label className="text-[11px] font-heading font-bold uppercase tracking-wider text-text-muted block mb-1.5">
-              Data/Hora de Abertura do Credenciamento
-            </label>
-            <input
-              type="datetime-local"
-              value={opensAtInput}
-              onChange={(e) => setOpensAtInput(e.target.value)}
-              required
-              className="w-full rounded-2xl border border-border/80 bg-background-soft/60 focus:bg-white px-4 py-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-xs font-medium transition-all"
-            />
+        {/* Seção 2: Datas Customizadas */}
+        <div className="lg:col-span-12 bg-white p-6 sm:p-8 rounded-[24px] shadow-xs border border-border/80 space-y-6">
+          <div className="flex items-center gap-2.5 border-b border-border/60 pb-3 text-primary">
+            <div className="w-9 h-9 rounded-md bg-surface-warm flex items-center justify-center text-primary">
+              <Calendar size={18} />
+            </div>
+            <div>
+              <h3 className="font-heading font-black text-base text-primary-dark tracking-tight">
+                Janela de Datas Customizada
+              </h3>
+              <p className="text-[11px] text-text-muted">
+                Defina o período exato em que a emissão pública ficará disponível.
+              </p>
+            </div>
           </div>
 
-          <div>
-            <label className="text-[11px] font-heading font-bold uppercase tracking-wider text-text-muted block mb-1.5">
-              Data/Hora de Encerramento do Credenciamento
-            </label>
-            <input
-              type="datetime-local"
-              value={closesAtInput}
-              onChange={(e) => setClosesAtInput(e.target.value)}
-              required
-              className="w-full rounded-2xl border border-border/80 bg-background-soft/60 focus:bg-white px-4 py-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-xs font-medium transition-all"
-            />
-          </div>
+          <form onSubmit={handleSaveDates} className="space-y-4 max-w-xl">
+            <div>
+              <label className="text-[10px] font-heading font-bold uppercase tracking-wider text-text-muted block mb-1.5">
+                Data/Hora de Abertura do Credenciamento
+              </label>
+              <input
+                type="datetime-local"
+                value={opensAtInput}
+                onChange={(e) => setOpensAtInput(e.target.value)}
+                required
+                className="w-full rounded-md border border-border/80 bg-background-soft/60 focus:bg-white px-3.5 py-2.5 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-xs font-mono transition-all"
+              />
+            </div>
 
-          <Button
-            type="submit"
-            size="md"
-            disabled={actionLoading === "dates"}
-            className="rounded-full font-bold uppercase text-xs px-6 py-3 bg-primary hover:bg-primary-hover shadow-xs mt-2"
-          >
-            {actionLoading === "dates" ? (
-              <Loader2 className="animate-spin" size={16} />
-            ) : (
-              "Salvar Novas Datas"
-            )}
-          </Button>
-        </form>
+            <div>
+              <label className="text-[10px] font-heading font-bold uppercase tracking-wider text-text-muted block mb-1.5">
+                Data/Hora de Encerramento do Credenciamento
+              </label>
+              <input
+                type="datetime-local"
+                value={closesAtInput}
+                onChange={(e) => setClosesAtInput(e.target.value)}
+                required
+                className="w-full rounded-md border border-border/80 bg-background-soft/60 focus:bg-white px-3.5 py-2.5 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-xs font-mono transition-all"
+              />
+            </div>
+
+            <Button
+              type="submit"
+              size="sm"
+              disabled={actionLoading === "dates"}
+              className="rounded-md font-bold uppercase text-xs px-6 py-2.5 bg-primary hover:bg-primary-hover shadow-xs mt-2"
+            >
+              {actionLoading === "dates" ? (
+                <Loader2 className="animate-spin" size={16} />
+              ) : (
+                "Salvar Novas Datas"
+              )}
+            </Button>
+          </form>
+        </div>
+
       </div>
     </div>
   );
