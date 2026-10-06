@@ -1,5 +1,4 @@
 Contexto e Objetivo:
-
 Preciso implementar um fluxo de credenciamento/check-in via QR Code para geração e validação de certificados de eventos, sem exigir cadastro ou login prévio por parte do participante.
 
 1. Requisitos Funcionais (Fluxo do Usuário)
