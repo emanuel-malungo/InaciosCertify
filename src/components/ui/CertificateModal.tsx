@@ -110,7 +110,6 @@ export default function CertificateModal({
           if (data.ticket?.token) {
             const url = await QRCode.toDataURL(data.ticket.token, { margin: 1, width: 280 });
             setDeviceQrUrl(url);
-            setScannedToken(data.ticket.token);
           }
         }
       } catch (err) {
@@ -318,10 +317,6 @@ export default function CertificateModal({
         {/* Cabeçalho do Modal */}
         <div className="bg-gradient-to-r from-[#8B1800] via-[#731300] to-[#4D0800] text-white p-5 sm:p-6 flex items-center justify-between relative shrink-0">
           <div>
-            <div className="flex items-center gap-2 text-gold font-heading font-bold text-[10px] sm:text-xs uppercase tracking-widest">
-              <Award className="w-4 h-4 text-gold" />
-              <span>Inácios Certify · Credenciamento</span>
-            </div>
             <h2 className="font-heading font-black text-lg sm:text-2xl text-white uppercase tracking-tight mt-0.5">
               Emitir Certificado Digital
             </h2>
@@ -401,7 +396,10 @@ export default function CertificateModal({
               <div className="flex border-b border-border">
                 <button
                   type="button"
-                  onClick={() => setActiveTab("meu-qr")}
+                  onClick={() => {
+                    setActiveTab("meu-qr");
+                    setError("");
+                  }}
                   className={`flex-1 py-3 font-heading font-bold text-xs uppercase tracking-wider border-b-2 transition-colors flex items-center justify-center gap-2 ${
                     activeTab === "meu-qr"
                       ? "border-primary text-primary"
@@ -412,7 +410,11 @@ export default function CertificateModal({
                 </button>
                 <button
                   type="button"
-                  onClick={() => setActiveTab("scan")}
+                  onClick={() => {
+                    setActiveTab("scan");
+                    setScannedToken(null);
+                    setError("");
+                  }}
                   className={`flex-1 py-3 font-heading font-bold text-xs uppercase tracking-wider border-b-2 transition-colors flex items-center justify-center gap-2 ${
                     activeTab === "scan"
                       ? "border-primary text-primary"
