@@ -16,8 +16,8 @@ const navLinks: NavLinkItem[] = [
   { label: "Sobre Nós", href: "#sobre" },
   { label: "Serviços", href: "#servicos" },
   { label: "Oradores", href: "#oradores" },
-  { label: "Parceiros", href: "#parceiros" },
-  { label: "Contacto", href: "#contacto" },
+  { label: "FAQ", href: "#faq" },
+  { label: "Localização", href: "#localizacao" },
 ];
 
 export default function Header() {

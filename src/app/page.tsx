@@ -4,10 +4,13 @@ import Footer from "@/components/layout/Footer";
 import AboutSection from "@/components/sections/About";
 import ServicesSection from "@/components/sections/Services";
 import SpeakersSection from "@/components/sections/Speakers";
+import LocationSection from "@/components/sections/Location";
+import FAQSection from "@/components/sections/FAQ";
+import FloatingActionButton from "@/components/ui/FloatingActionButton";
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col bg-background text-text selection:bg-primary selection:text-white">
+    <main className="min-h-screen flex flex-col bg-background text-text selection:bg-primary selection:text-white relative">
       {/* Header Fixo de Navegação */}
       <Header />
 
@@ -23,7 +26,17 @@ export default function Home() {
       {/* Seção 4: Programação Final de Oradores (#oradores) */}
       <SpeakersSection />
 
+      {/* Seção 5: Perguntas Frequentes (#faq) */}
+      <FAQSection />
+
+      {/* Seção 6: Localização do Evento - Hotel Diamante (#localizacao) */}
+      <LocationSection />
+
+      {/* Rodapé da Página */}
       <Footer />
+
+      {/* Botão Flutuante de Navegação (Topo / Fim) */}
+      <FloatingActionButton />
     </main>
   );
 }

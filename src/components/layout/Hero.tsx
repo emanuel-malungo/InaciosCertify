@@ -145,7 +145,7 @@ export default function Hero() {
             <div className="flex flex-col items-center sm:items-start gap-1.5">
               <span className="font-heading font-bold text-xs uppercase tracking-widest text-gold flex items-center gap-1.5">
                 <Calendar className="w-3.5 h-3.5 text-primary" />
-                Contagem Regressiva · Dia do Evento (08 de Outubro)
+                Dia do Evento (08 de Outubro)
               </span>
               <Countdown variant="dark" targetDate="2026-10-08T00:00:00" />
             </div>

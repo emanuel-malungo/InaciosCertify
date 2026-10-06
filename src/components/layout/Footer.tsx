@@ -15,10 +15,10 @@ const footerLinks = [
   { label: "Home", href: "#" },
   { label: "Sobre Nós", href: "#sobre" },
   { label: "Os Nossos Serviços", href: "#servicos" },
-  { label: "Parceiros", href: "#parceiros" },
-  { label: "Localização & Programa", href: "#localizacao" },
-  { label: "Validar Certificado", href: "#emitir" },
-  { label: "Contacte-nos", href: "#contacto" },
+  { label: "Oradores", href: "#oradores" },
+  { label: "Perguntas Frequentes", href: "#faq" },
+  { label: "Localização", href: "#localizacao" },
+  { label: "Validar Certificado", href: "/certificado" },
 ];
 
 export default function Footer() {
