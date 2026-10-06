@@ -6,6 +6,7 @@ import iconTpa from "@/assets/images/iconTPA.png";
 import iconTvZimbo from "@/assets/images/iconTvZimbo.png";
 import iconPlatina from "@/assets/images/iconPlatinaline.png";
 import iconSap from "@/assets/images/iconSap.png";
+import iconGrupoInacio from "@/assets/images/iconGrupoInacio.png";
 import Countdown from "@/components/ui/Countdown";
 import { ArrowRight, Calendar, ShieldCheck } from "lucide-react";
 
@@ -198,7 +199,16 @@ export default function Hero() {
                   <Image
                     src={iconSap}
                     alt="SAP"
-                    className="h-6 sm:h-7 lg:h-8 w-auto object-contain transition-transform duration-200 hover:scale-105"
+                    className="h-6 sm:h-7 lg:h-8 w-auto object-contain transition-transform duration-200 hover:scale-105 filter drop-shadow-xs"
+                  />
+                </div>
+
+                {/* GRUPO INÁCIO */}
+                <div className="relative h-7 sm:h-8 lg:h-9 w-auto flex items-center" title="Grupo Inácio">
+                  <Image
+                    src={iconGrupoInacio}
+                    alt="Grupo Inácio"
+                    className="h-7 sm:h-8 lg:h-9 w-auto object-contain transition-transform duration-200 hover:scale-105"
                   />
                 </div>
 
