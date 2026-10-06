@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import edina from "@/assets/images/hero_dina4.png";
+import edina from "@/assets/images/hero_dina4 (1).png";
 import iconTpa from "@/assets/images/iconTPA.png";
 import iconTvZimbo from "@/assets/images/iconTvZimbo.png";
 import iconPlatina from "@/assets/images/iconPlatinaline.png";
@@ -25,32 +25,36 @@ export default function Hero() {
       <div className="absolute top-20 right-1/3 w-64 h-64 rounded-full bg-white/5 blur-3xl pointer-events-none z-0" />
 
       {/* ── Imagem da Oradora Principal (Desktop: Flancagem Direita Flutuante) ── */}
-      <div className="hidden lg:flex absolute bottom-0 right-0 w-1/2 xl:w-5/12 h-5/6 xl:h-full items-end justify-end pointer-events-none z-10">
+      <div className="hidden lg:flex absolute bottom-0 right-0 lg:right-6 xl:right-14 w-1/2 xl:w-[45%] h-full items-end justify-end pointer-events-none z-10">
         
         {/* Glow dourado de halo atrás de Dina Simão */}
-        <div className="absolute bottom-20 right-16 w-96 h-96 rounded-full bg-linear-to-tr from-gold/25 to-accent/15 blur-3xl -z-10" />
+        <div className="absolute bottom-12 right-12 w-[480px] h-[480px] rounded-full bg-gradient-to-tr from-gold/25 via-accent/15 to-transparent blur-3xl -z-10" />
 
-        {/* Fotografia Principal em Alta Resolução */}
-        <Image
-          src={edina}
-          alt="Dina Simão — Fundadora & Oradora Principal Portfólio Comunique"
-          fill
-          priority
-          sizes="(max-width: 1024px) 100vw, 48vw"
-          className="object-contain object-bottom lg:object-right-bottom drop-shadow-2xl transition-transform duration-700 hover:scale-105"
-        />
+        {/* Fotografia Principal em Alta Resolução (Fundo Transparente Assente no Dock) */}
+        <div className="relative w-full h-[88%] lg:h-[93%] xl:h-[97%] flex items-end justify-end">
+          <Image
+            src={edina}
+            alt="Dina Simão — Fundadora & Oradora Principal Portfólio Comunique"
+            fill
+            priority
+            sizes="(max-width: 1024px) 100vw, 45vw"
+            className="object-contain object-bottom lg:object-right-bottom drop-shadow-[0_25px_50px_rgba(0,0,0,0.6)]"
+          />
 
-        {/* Etiqueta Flutuante de Assinatura Luxury Glass (Desktop) */}
-        <div className="absolute bottom-36 xl:bottom-40 right-8 xl:right-14 bg-white/95 backdrop-blur-md text-primary border border-white/90 shadow-2xl rounded-2xl p-4 sm:p-5 pointer-events-auto z-30 hover:-translate-y-1 transition-all duration-300 origin-bottom-right">
-          <div className="flex items-center gap-1.5">
-            <p className="font-heading text-base xl:text-lg font-black leading-tight text-primary">
-              Dina Simão
+          {/* Etiqueta Flutuante de Assinatura Luxury Glass (Desktop) */}
+          {/* <div className="absolute bottom-20 xl:bottom-24 -left-4 lg:-left-8 xl:-left-12 bg-foreground/80 backdrop-blur-2xl border border-gold/40 text-white shadow-2xl shadow-black/60 rounded-2xl p-4 xl:p-5 pointer-events-auto z-30 hover:-translate-y-1 transition-all duration-300">
+            <div className="flex items-center gap-2">
+              <div className="w-2.5 h-2.5 rounded-full bg-gold shadow-sm shadow-gold/50 animate-pulse" />
+              <p className="font-heading text-sm xl:text-base font-black text-white leading-tight">
+                Dina Simão
+              </p>
+            </div>
+            <p className="font-sans text-xs font-medium text-white/85 mt-1 leading-tight">
+              Fundadora Ekanda Group · Estrategista de Imagem
             </p>
-          </div>
-          <p className="font-sans text-xs font-medium text-text-muted mt-0.5 leading-tight">
-            Fundadora Ekanda Group · Estrategista de Imagem
-          </p>
+          </div> */}
         </div>
+
       </div>
 
       {/* ── Conteúdo Principal do Topo / Centro ── */}
@@ -111,27 +115,34 @@ export default function Hero() {
           </div>
 
           {/* ── Imagem Integrada para Telas Mobile / Tablet ── */}
-          <div className="lg:hidden flex flex-col items-center pointer-events-auto pt-2 pb-2">
-            <div className="relative w-full max-w-xs sm:max-w-sm h-80 sm:h-96 flex items-end justify-center">
+          <div className="lg:hidden relative pointer-events-auto -mx-4 sm:-mx-6 -mb-6 sm:-mb-8 pt-2">
+            <div className="relative w-full h-[440px] min-[420px]:h-[500px] sm:h-[620px] md:h-[700px] flex items-end justify-center overflow-hidden">
               
               {/* Glow circular de fundo */}
-              <div className="absolute inset-0 m-auto w-64 h-64 rounded-full bg-linear-to-tr from-gold/30 to-accent/20 blur-2xl -z-10" />
+              <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-[320px] h-[320px] sm:w-[480px] sm:h-[480px] rounded-full bg-gradient-to-tr from-gold/30 via-accent/20 to-transparent blur-3xl -z-10" />
 
+              {/* Fotografia ampliada (a imagem possui margem transparente, por isso o scale) */}
               <Image
                 src={edina}
                 alt="Dina Simão — Fundadora & Oradora Principal"
                 fill
                 priority
-                sizes="(max-width: 640px) 320px, 384px"
-                className="object-contain object-bottom drop-shadow-xl"
+                sizes="100vw"
+                className="object-contain object-bottom scale-100 sm:scale-[1.05] origin-bottom drop-shadow-[0_20px_40px_rgba(0,0,0,0.55)]"
               />
 
-              {/* Badge da Oradora Mobile */}
-              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-full max-w-xs bg-white/95 backdrop-blur-md text-primary border border-white/90 shadow-xl rounded-2xl px-4 py-2.5 text-center">
-                <p className="font-heading text-sm font-black text-primary">
-                  Dina Simão
-                </p>
-                <p className="font-sans text-xs text-text-muted">
+              {/* Degradê inferior para fundir a imagem com o dock branco */}
+              <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-primary-dark/70 to-transparent pointer-events-none" />
+
+              {/* Badge da Oradora Mobile (compacto, sobre a base da imagem) */}
+              <div className="absolute bottom-4 left-4 right-4 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:w-full sm:max-w-sm bg-foreground/75 backdrop-blur-xl border border-gold/40 text-white shadow-xl rounded-2xl px-4 py-2.5 text-center">
+                <div className="flex items-center justify-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
+                  <p className="font-heading text-sm font-black text-white leading-tight">
+                    Dina Simão
+                  </p>
+                </div>
+                <p className="font-sans text-[11px] text-white/85 mt-0.5 leading-tight">
                   Fundadora Ekanda Group · Estrategista de Imagem
                 </p>
               </div>
