@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import edina from "@/assets/images/hero_dina4.png";
 import iconTpa from "@/assets/images/iconTPA.png";
@@ -5,9 +7,13 @@ import iconTvZimbo from "@/assets/images/iconTvZimbo.png";
 import iconPlatina from "@/assets/images/iconPlatinaline.png";
 import iconSap from "@/assets/images/iconSap.png";
 import Countdown from "@/components/ui/Countdown";
-import { ArrowRight, Sparkles, Calendar, MapPin, CheckCircle2, ShieldCheck } from "lucide-react";
+import { ArrowRight, Calendar, ShieldCheck } from "lucide-react";
 
 export default function Hero() {
+  const openModal = () => {
+    window.dispatchEvent(new CustomEvent("open-certificate-modal"));
+  };
+
   return (
     <section className="relative w-full min-h-screen lg:h-screen overflow-hidden bg-linear-to-br from-primary via-primary-hover to-primary-dark text-white flex flex-col justify-between select-none">
       
@@ -39,7 +45,6 @@ export default function Hero() {
             <p className="font-heading text-base xl:text-lg font-black leading-tight text-primary">
               Dina Simão
             </p>
-            <CheckCircle2 className="w-4 h-4 text-primary fill-white" />
           </div>
           <p className="font-sans text-xs font-medium text-text-muted mt-0.5 leading-tight">
             Fundadora Ekanda Group · Estrategista de Imagem
@@ -80,9 +85,9 @@ export default function Hero() {
 
             {/* 5. Ações (Botoes de Conversao) */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4 w-full sm:w-auto mb-6 sm:mb-7">
-              {/* Botão Primário */}
+              {/* Botão Primário: Ir para Sobre Nós */}
               <a
-                href="#participar"
+                href="#sobre"
                 className="inline-flex items-center justify-center gap-3.5 pl-6 sm:pl-7 pr-2 py-2 sm:py-2.5 bg-white text-primary hover:bg-neutral-100 font-heading font-bold text-xs sm:text-sm uppercase tracking-wider rounded-full shadow-xl hover:shadow-2xl hover:-translate-y-0.5 transition-all duration-300 active:scale-95 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
                 <span>Quero Participar</span>
@@ -91,14 +96,15 @@ export default function Hero() {
                 </div>
               </a>
 
-              {/* Botão Secundário Glass */}
-              <a
-                href="#certificados"
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 sm:py-3.5 bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-white/40 font-heading font-semibold text-xs sm:text-sm uppercase tracking-wider rounded-full backdrop-blur-md transition-all duration-200 active:scale-95"
+              {/* Botão Secundário: Emitir Certificado (Abre Modal) */}
+              <button
+                type="button"
+                onClick={openModal}
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 sm:py-3.5 bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-white/40 font-heading font-semibold text-xs sm:text-sm uppercase tracking-wider rounded-full backdrop-blur-md transition-all duration-200 active:scale-95 cursor-pointer"
               >
                 <ShieldCheck className="w-4 h-4 text-gold" />
                 <span>Emitir Certificado</span>
-              </a>
+              </button>
             </div>
 
           </div>

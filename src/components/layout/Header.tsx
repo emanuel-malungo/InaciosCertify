@@ -84,28 +84,21 @@ export default function Header() {
             />
           </a>
 
-          {/* ── 2. Floating Capsule Pill Navigation (Centro) ── */}
-          <nav
-            className={`hidden lg:flex items-center rounded-full px-4 py-1.5 transition-all duration-200 ${
-              isScrolled
-                ? "bg-background-soft border border-border shadow-sm"
-                : "bg-white/10 backdrop-blur-md border border-white/20 shadow-md"
-            }`}
-            aria-label="Navegação principal"
-          >
-            <ul className="flex items-center space-x-1 xl:space-x-2">
+          {/* ── 2. Clean Navigation (Centro) ── */}
+          <nav className="hidden lg:flex items-center" aria-label="Navegação principal">
+            <ul className="flex items-center space-x-2 xl:space-x-4">
               {navLinks.map((link) => (
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    className={`inline-flex items-center font-heading text-xs font-semibold tracking-wide rounded-full px-3.5 py-1.5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                      link.isActive
-                        ? isScrolled
-                          ? "bg-primary text-white shadow-xs"
-                          : "bg-white text-primary shadow-xs"
-                        : isScrolled
-                        ? "text-text-muted hover:text-primary hover:bg-neutral-200/60"
-                        : "text-white/90 hover:text-white hover:bg-white/15"
+                    className={`inline-flex items-center font-heading text-xs uppercase tracking-wider font-bold py-1.5 px-2 transition-colors duration-200 focus-visible:outline-none ${
+                      isScrolled
+                        ? link.isActive
+                          ? "text-primary border-b-2 border-primary"
+                          : "text-foreground/80 hover:text-primary"
+                        : link.isActive
+                        ? "text-white border-b-2 border-gold"
+                        : "text-white/80 hover:text-white"
                     }`}
                   >
                     <span>{link.label}</span>
