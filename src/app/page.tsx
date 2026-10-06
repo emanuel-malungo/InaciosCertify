@@ -7,6 +7,7 @@ import SpeakersSection from "@/components/sections/Speakers";
 import LocationSection from "@/components/sections/Location";
 import FAQSection from "@/components/sections/FAQ";
 import FloatingActionButton from "@/components/ui/FloatingActionButton";
+import CertificateModal from "@/components/ui/CertificateModal";
 
 export default function Home() {
   return (
@@ -37,6 +38,9 @@ export default function Home() {
 
       {/* Botão Flutuante de Navegação (Topo / Fim) */}
       <FloatingActionButton />
+
+      {/* Modal de Emissão e Credenciamento de Certificado */}
+      <CertificateModal />
     </main>
   );
 }

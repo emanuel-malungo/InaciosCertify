@@ -47,6 +47,12 @@ export default function Footer() {
               <li key={link.label}>
                 <a
                   href={link.href}
+                  onClick={(e) => {
+                    if (link.href === "/certificado") {
+                      e.preventDefault();
+                      window.dispatchEvent(new CustomEvent("open-certificate-modal"));
+                    }
+                  }}
                   className="hover:text-gold transition-colors"
                 >
                   {link.label}

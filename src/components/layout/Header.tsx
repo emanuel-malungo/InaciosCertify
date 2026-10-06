@@ -117,8 +117,12 @@ export default function Header() {
 
           {/* ── 3. Botão Pill à Direita: "Emitir Certificado" ── */}
           <div className="hidden lg:flex items-center">
-            <a
-              href="/certificado"
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                window.dispatchEvent(new CustomEvent("open-certificate-modal"));
+              }}
               className={`inline-flex items-center gap-3 pl-5 pr-1.5 py-1.5 font-heading font-bold text-xs tracking-wider uppercase rounded-full shadow-md hover:shadow-lg transition-all duration-300 active:scale-95 group focus-visible:outline-none focus-visible:ring-2 ${
                 isScrolled
                   ? "bg-primary text-white hover:bg-primary-hover focus-visible:ring-primary"
@@ -133,7 +137,7 @@ export default function Header() {
               >
                 <ArrowUpRight className="w-4 h-4 stroke-2" />
               </div>
-            </a>
+            </button>
           </div>
 
           {/* ── Mobile Hamburger Trigger ── */}
@@ -231,16 +235,20 @@ export default function Header() {
 
           {/* Action Mobile */}
           <div className="pt-2 border-t border-white/15">
-            <a
-              href="/certificado"
-              onClick={() => setIsOpen(false)}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsOpen(false);
+                window.dispatchEvent(new CustomEvent("open-certificate-modal"));
+              }}
               className="w-full flex items-center justify-center gap-3 py-3.5 bg-white text-primary font-heading font-bold text-xs uppercase tracking-wider rounded-full shadow-lg transition-transform active:scale-95"
             >
               <span>Emitir Certificado</span>
               <div className="w-5 h-5 rounded-full bg-primary text-white flex items-center justify-center">
                 <ArrowUpRight className="w-3.5 h-3.5 stroke-2" />
               </div>
-            </a>
+            </button>
             <p className="text-center text-xs font-sans text-white/70 mt-3">
               Validação instantânea e oficial de certificados
             </p>
