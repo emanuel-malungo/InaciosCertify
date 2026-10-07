@@ -10,8 +10,8 @@ interface TimeLeft {
 }
 
 function calcTimeLeft(targetDateStr?: string): TimeLeft {
-  // 8 de Outubro de 2026 — 00:00:00 (Dia do Evento)
-  const targetDate = targetDateStr ? new Date(targetDateStr) : new Date("2026-10-08T00:00:00");
+  // 8 de Outubro de 2026 — 12:00:00 (Dia do Evento)
+  const targetDate = targetDateStr ? new Date(targetDateStr) : new Date("2026-10-08T12:00:00");
   const target = targetDate.getTime();
   const diff = target - Date.now();
 
@@ -30,7 +30,7 @@ interface CountdownProps {
   targetDate?: string;
 }
 
-export default function Countdown({ variant = "dark", targetDate = "2026-10-08T00:00:00" }: CountdownProps) {
+export default function Countdown({ variant = "dark", targetDate = "2026-10-08T12:00:00" }: CountdownProps) {
   const [time, setTime] = useState<TimeLeft>(calcTimeLeft(targetDate));
 
   useEffect(() => {
