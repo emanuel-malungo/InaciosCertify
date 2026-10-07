@@ -20,8 +20,10 @@ const MAX_FONT_SIZE = 56;
 const MIN_FONT_SIZE = 26;
 
 const NAME_COLOR = rgb(0.66, 0.08, 0.08);
-const QR_BOX = { x: 140, top: 130, size: 120, pad: 8 };
+const QR_BOX = { x: 140, top: 130, size: 85, pad: 6 };
 const GOLD = rgb(0.70, 0.54, 0.35);
+const BURGUNDY_QR = "#580C04";
+const CREAM_BG = "#FDFBF7";
 
 const publicDir = path.join(process.cwd(), "public");
 let assets: Promise<{ template: Buffer; font: Buffer }> | undefined;
@@ -72,27 +74,30 @@ export async function renderCertificatePdf(input: CertificatePdfInput): Promise<
     color: NAME_COLOR,
   });
 
-  // ── QR de validação pública ──
+  // ── QR de validação pública elegante ──
   const qrPng = await QRCode.toBuffer(verificationUrl(input.verificationCode), {
     type: "png",
     errorCorrectionLevel: "M",
     margin: 0,
-    width: 600,
-    color: { dark: "#3b0d06", light: "#ffffff" },
+    width: 400,
+    color: { dark: BURGUNDY_QR, light: CREAM_BG },
   });
   const qrImage = await pdf.embedPng(qrPng);
 
   const boxSize = QR_BOX.size + QR_BOX.pad * 2;
   const boxY = PAGE_H - QR_BOX.top - boxSize;
+
+  // Moldura do QR Code com Fundo Creme & Borda Dourada Luxury
   page.drawRectangle({
     x: QR_BOX.x,
     y: boxY,
     width: boxSize,
     height: boxSize,
-    color: rgb(1, 1, 1),
+    color: rgb(0.99, 0.98, 0.96),
     borderColor: GOLD,
-    borderWidth: 1,
+    borderWidth: 1.5,
   });
+
   page.drawImage(qrImage, {
     x: QR_BOX.x + QR_BOX.pad,
     y: boxY + QR_BOX.pad,
@@ -102,19 +107,20 @@ export async function renderCertificatePdf(input: CertificatePdfInput): Promise<
 
   const caption = "Verifique a autenticidade";
   const serialLabel = formatSerial(input.serial);
-  const capSize = 9;
-  const serialSize = 11;
+  const capSize = 8.5;
+  const serialSize = 10;
   const centerX = QR_BOX.x + boxSize / 2;
+
   page.drawText(caption, {
     x: centerX - font.widthOfTextAtSize(caption, capSize) / 2,
-    y: boxY - 16,
+    y: boxY - 14,
     size: capSize,
     font,
     color: NAME_COLOR,
   });
   page.drawText(serialLabel, {
     x: centerX - font.widthOfTextAtSize(serialLabel, serialSize) / 2,
-    y: boxY - 31,
+    y: boxY - 27,
     size: serialSize,
     font,
     color: NAME_COLOR,

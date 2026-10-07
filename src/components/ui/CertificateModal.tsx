@@ -87,6 +87,7 @@ export default function CertificateModal({
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [showTokenDetails, setShowTokenDetails] = useState(false);
 
   // Camera State
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -368,6 +369,49 @@ export default function CertificateModal({
 
               <div className="p-4 bg-background-soft rounded-2xl text-xs text-text-muted border border-border/60">
                 💡 O seu certificado está seguro e associado permanentemente ao seu QR Code. Pode descarregar o ficheiro PDF oficial sempre que necessário.
+              </div>
+
+              {/* Bloco de Token & QR Code de Credenciamento (Acessível após Emissão) */}
+              <div className="bg-surface-warm/40 border border-gold/30 rounded-2xl p-4 text-left space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <QrCode size={18} className="text-primary" />
+                    <span className="font-heading font-bold text-xs uppercase tracking-wider text-primary-dark">
+                      O Seu Token & QR Code de Credenciamento
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowTokenDetails(!showTokenDetails)}
+                    className="text-[11px] font-heading font-bold text-primary hover:underline px-2.5 py-1 rounded bg-white/90 border border-border shadow-2xs"
+                  >
+                    {showTokenDetails ? "Ocultar QR Code" : "Ver QR Code / Token"}
+                  </button>
+                </div>
+
+                {showTokenDetails && (
+                  <div className="pt-3 border-t border-gold/20 flex flex-col items-center text-center space-y-3 animate-in fade-in duration-200">
+                    {deviceQrUrl && (
+                      <div className="p-3 bg-white border border-gold/30 rounded-xl shadow-xs">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={deviceQrUrl} alt="O seu QR Code de participante" className="w-44 h-44 mx-auto" />
+                      </div>
+                    )}
+                    {ticket?.token && (
+                      <div className="flex items-center gap-2 text-xs font-mono bg-white px-3 py-1.5 rounded-full border border-border max-w-full">
+                        <span className="truncate max-w-[200px] sm:max-w-[280px]">{ticket.token}</span>
+                        <button
+                          type="button"
+                          onClick={copyToken}
+                          className="p-1 rounded hover:bg-surface-warm text-primary transition-colors shrink-0"
+                          title="Copiar token"
+                        >
+                          {copied ? <Check size={14} /> : <Copy size={14} />}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               {pdfUrl && (

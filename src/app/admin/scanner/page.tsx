@@ -294,23 +294,23 @@ export default function AdminScannerPage() {
                 <KeyRound size={12} className="text-gold" /> Validação Manual
               </span>
               <h3 className="font-heading font-black text-lg text-primary-dark tracking-tight">
-                Digitar Código de Token
+                Digitar Código ou URL do QR Code
               </h3>
               <p className="text-xs text-text-muted mt-0.5">
-                Introduza o código impresso ou enviado ao participante para validar o ingresso.
+                Introduza o código de verificação do certificado, o token de ingresso ou o link completo do QR Code.
               </p>
             </div>
 
             <form onSubmit={handleManualSubmit} className="space-y-4">
               <div>
                 <label className="text-[10px] font-heading font-bold uppercase tracking-wider text-text-muted block mb-1">
-                  Código de Token do Ingresso
+                  Código de Verificação, Token ou URL
                 </label>
                 <input
                   type="text"
                   value={manualToken}
                   onChange={(e) => setManualToken(e.target.value)}
-                  placeholder="Ex: eyJhbGciOiJIUzI1Ni..."
+                  placeholder="Ex: 9A2B3C4D, eyJhbGci... ou https://.../validar/CODE"
                   autoFocus
                   className="w-full bg-background-soft focus:bg-white text-xs font-mono text-primary-dark px-3.5 py-2.5 rounded-md border border-border/80 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
                 />

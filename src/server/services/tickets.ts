@@ -5,6 +5,7 @@ import type { DeviceIdentity } from "@/server/security/device";
 import { safeEqual, signTicketToken, verifyTicketToken } from "@/server/security/tokens";
 import { audit } from "@/server/services/audit";
 import { assertCheckinOpen } from "@/server/services/event";
+import { toCertificateSummary } from "@/server/services/certificate-dto";
 
 export type TicketWithCertificate = Ticket & { certificate: Certificate | null };
 export type AuthorizedTicket = { ticket: TicketWithCertificate; event: Event; certificate: Certificate | null };
@@ -121,3 +122,88 @@ async function bindOrVerifyDevice(ticket: Ticket, device: DeviceIdentity): Promi
     throw err;
   }
 }
+
+/**
+ * Lê e valida um QR Code, URL (/validar/CODE), Código de Verificação ou Token JWT.
+ * Permite que tanto os participantes como os administradores no Scanner leiam qualquer QR Code válido.
+ */
+export async function scanTicketOrCertificate(rawInput: string) {
+  const cleanInput = rawInput.trim();
+
+  // 1. Extrair código se for uma URL de validação pública (/validar/CODE ou https://.../validar/CODE)
+  let codeFromUrl: string | null = null;
+  const match = cleanInput.match(/\/validar\/([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    codeFromUrl = match[1];
+  }
+
+  const searchCode = codeFromUrl || cleanInput;
+
+  // 2. Tentar encontrar diretamente pelo verificationCode do certificado
+  const certByCode = await prisma.certificate.findUnique({
+    where: { verificationCode: searchCode },
+    include: { event: true },
+  });
+
+  if (certByCode) {
+    return {
+      state: "ALREADY_ISSUED" as const,
+      eventName: certByCode.event.name,
+      certificate: toCertificateSummary(certByCode, certByCode.event),
+    };
+  }
+
+  // 3. Tentar validar como JWT Token de Ingresso
+  const parsed = verifyTicketToken(cleanInput);
+  if (parsed) {
+    const ticket = await prisma.ticket.findUnique({
+      where: { id: parsed.ticketId },
+      include: { certificate: true, event: true },
+    });
+
+    if (ticket) {
+      if (ticket.qrVersion !== parsed.qrVersion) {
+        throw new ApiError(410, "QR_REPLACED", "Este QR Code foi substituído por um novo.");
+      }
+      if (ticket.status === "INVALIDATED") {
+        throw new ApiError(410, "QR_INVALIDATED", "Este QR Code foi invalidado pela organização.");
+      }
+
+      if (ticket.certificate) {
+        return {
+          state: "ALREADY_ISSUED" as const,
+          eventName: ticket.event.name,
+          certificate: toCertificateSummary(ticket.certificate, ticket.event),
+        };
+      }
+
+      return {
+        state: "READY_TO_ISSUE" as const,
+        eventName: ticket.event.name,
+      };
+    }
+  }
+
+  // 4. Fallback: procurar por ID de Ingresso
+  const ticketById = await prisma.ticket.findUnique({
+    where: { id: cleanInput },
+    include: { certificate: true, event: true },
+  });
+
+  if (ticketById) {
+    if (ticketById.certificate) {
+      return {
+        state: "ALREADY_ISSUED" as const,
+        eventName: ticketById.event.name,
+        certificate: toCertificateSummary(ticketById.certificate, ticketById.event),
+      };
+    }
+    return {
+      state: "READY_TO_ISSUE" as const,
+      eventName: ticketById.event.name,
+    };
+  }
+
+  throw new ApiError(404, "INVALID_QR", "QR Code, URL ou Token não reconhecido no sistema.");
+}
+
