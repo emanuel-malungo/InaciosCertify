@@ -123,10 +123,10 @@ export default function CertificateModal({
     init();
   }, [isModalOpen]);
 
-  // Se já tiver certificado gerado
+  // Se já tiver certificado gerado ou lido
   useEffect(() => {
     if (cert) {
-      setPdfUrl("/api/certificates/pdf");
+      setPdfUrl(cert.verificationCode ? `/api/certificates/pdf?code=${cert.verificationCode}` : "/api/certificates/pdf");
     }
   }, [cert]);
 
@@ -211,7 +211,7 @@ export default function CertificateModal({
       setScannedToken(data);
       if (result.state === "ALREADY_ISSUED") {
         setCert(result.certificate);
-        setPdfUrl("/api/certificates/pdf");
+        setPdfUrl(result.certificate?.verificationCode ? `/api/certificates/pdf?code=${result.certificate.verificationCode}` : "/api/certificates/pdf");
       }
     } catch {
       setScannedToken(null);
@@ -296,7 +296,7 @@ export default function CertificateModal({
       if (!res.ok) {
         if (result.error?.code === "ALREADY_ISSUED" && result.error.certificate) {
           setCert(result.error.certificate);
-          setPdfUrl("/api/certificates/pdf");
+          setPdfUrl(result.error.certificate.verificationCode ? `/api/certificates/pdf?code=${result.error.certificate.verificationCode}` : "/api/certificates/pdf");
         } else {
           setError(result.error?.message || "Erro ao emitir certificado.");
         }
@@ -304,7 +304,7 @@ export default function CertificateModal({
       }
 
       setCert(result.certificate);
-      setPdfUrl("/api/certificates/pdf");
+      setPdfUrl(result.certificate?.verificationCode ? `/api/certificates/pdf?code=${result.certificate.verificationCode}` : "/api/certificates/pdf");
     } catch {
       setError("Não foi possível emitir o certificado. Tente novamente.");
     } finally {
@@ -313,7 +313,11 @@ export default function CertificateModal({
   }
 
   function downloadPdf() {
-    window.open("/api/certificates/pdf?download=1", "_blank");
+    if (cert?.verificationCode) {
+      window.open(`/api/certificates/pdf?code=${cert.verificationCode}&download=1`, "_blank");
+    } else {
+      window.open("/api/certificates/pdf?download=1", "_blank");
+    }
   }
 
   function copyToken() {

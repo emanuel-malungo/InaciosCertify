@@ -94,6 +94,18 @@ export async function getDeviceCertificate(device: DeviceIdentity): Promise<{ ce
   return { certificate: ticket.certificate, event };
 }
 
+/** Obter certificado pelo código de verificação público. */
+export async function getCertificateByCode(code: string): Promise<{ certificate: Certificate; event: Event }> {
+  const cert = await prisma.certificate.findUnique({
+    where: { verificationCode: code },
+    include: { event: true },
+  });
+  if (!cert) {
+    throw new ApiError(404, "NO_CERTIFICATE", "Certificado não encontrado com o código fornecido.");
+  }
+  return { certificate: cert, event: cert.event };
+}
+
 export function assertDownloadable(cert: Pick<Certificate, "status">): void {
   if (cert.status === "REVOKED") {
     throw new ApiError(403, "CERTIFICATE_REVOKED", "Este certificado foi revogado pela organização.");
