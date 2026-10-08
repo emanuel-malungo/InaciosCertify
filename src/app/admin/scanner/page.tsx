@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import jsQR from "jsqr";
-import { Camera, CheckCircle2, QrCode, Loader2, KeyRound, ArrowRight, RefreshCw, AlertCircle, X } from "lucide-react";
+import { Camera, CheckCircle2, QrCode, Loader2, KeyRound, ArrowRight, RefreshCw, AlertCircle, X, Upload } from "lucide-react";
 import Button from "@/components/ui/Button";
 
 type ScanResult = {
@@ -90,15 +90,69 @@ export default function AdminScannerPage() {
       const result = await res.json();
       if (!res.ok) {
         setScanError(result.error?.message || "QR Code ou Token inválido.");
+        setScanResult(null);
         return;
       }
       setScanResult(result);
       setIsManualModalOpen(false);
     } catch {
       setScanError("Erro ao comunicar com o servidor.");
+      setScanResult(null);
     } finally {
       setLoading(false);
     }
+  }
+
+  function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setScanError("");
+    setScanResult(null);
+    setLoading(true);
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
+        const maxDim = 1200;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const code = jsQR(imgData.data, imgData.width, imgData.height);
+          if (code && code.data) {
+            handleAdminScan(code.data);
+          } else {
+            setLoading(false);
+            setScanError("Nenhum QR Code válido foi detetado na imagem.");
+          }
+        } else {
+          setLoading(false);
+          setScanError("Erro ao processar imagem.");
+        }
+      };
+      img.onerror = () => {
+        setLoading(false);
+        setScanError("Não foi possível carregar o ficheiro de imagem.");
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
   }
 
   function handleManualSubmit(e: React.FormEvent) {
@@ -127,6 +181,12 @@ export default function AdminScannerPage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
+          <label className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-2 bg-white border border-border hover:bg-surface-warm rounded-md font-heading font-bold text-[11px] uppercase text-text transition-all shadow-2xs">
+            <Upload size={14} className="text-primary" />
+            <span>Upload Imagem</span>
+            <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
+          </label>
+
           <Button
             size="sm"
             variant="outline"

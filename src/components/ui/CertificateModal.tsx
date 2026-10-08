@@ -203,6 +203,7 @@ export default function CertificateModal({
       });
       const result = await res.json();
       if (!res.ok) {
+        setScannedToken(null);
         setError(result.error?.message || "QR Code inválido.");
         return;
       }
@@ -213,6 +214,7 @@ export default function CertificateModal({
         setPdfUrl("/api/certificates/pdf");
       }
     } catch {
+      setScannedToken(null);
       setError("Erro ao ler QR Code. Tente novamente.");
     } finally {
       setLoading(false);
@@ -223,21 +225,37 @@ export default function CertificateModal({
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setError("");
+    setScannedToken(null);
+
     const reader = new FileReader();
     reader.onload = (event) => {
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
+        let width = img.width;
+        let height = img.height;
+        const maxDim = 1200;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
         const ctx = canvas.getContext("2d");
         if (ctx) {
-          ctx.drawImage(img, 0, 0);
+          ctx.drawImage(img, 0, 0, width, height);
           const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
           const code = jsQR(imgData.data, imgData.width, imgData.height);
           if (code && code.data) {
             handleScannedCode(code.data);
           } else {
+            setScannedToken(null);
             setError("Nenhum QR Code válido foi detetado na imagem.");
           }
         }
@@ -249,9 +267,13 @@ export default function CertificateModal({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const tokenToUse = scannedToken || ticket?.token;
+    const tokenToUse = activeTab === "meu-qr" ? ticket?.token : scannedToken;
     if (!tokenToUse) {
-      setError("QR Code não identificado.");
+      setError(
+        activeTab === "scan"
+          ? "Nenhum QR Code válido foi detetado. Por favor, leia com a câmara ou carregue uma imagem com QR Code válido."
+          : "QR Code do dispositivo não encontrado."
+      );
       return;
     }
 
