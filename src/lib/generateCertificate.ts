@@ -23,7 +23,7 @@ export function formatName(raw: string): string {
 export async function generateCertificate(name: string): Promise<Uint8Array> {
   const [templateBytes, fontBytes] = await Promise.all([
     fetch("/Certificado.pdf").then((r) => r.arrayBuffer()),
-    fetch("/fonts/Montserrat.ttf").then((r) => r.arrayBuffer()),
+    fetch("/fonts/Montserrat-Bold.ttf").then((r) => r.arrayBuffer()),
   ]);
 
   const pdf = await PDFDocument.load(templateBytes);
@@ -39,9 +39,19 @@ export async function generateCertificate(name: string): Promise<Uint8Array> {
   }
 
   const width = font.widthOfTextAtSize(text, size);
+  const xPos = LINE_CENTER_X - width / 2;
+  const yPos = LINE_Y + 18;
+
   page.drawText(text, {
-    x: LINE_CENTER_X - width / 2,
-    y: LINE_Y + 18,
+    x: xPos,
+    y: yPos,
+    size,
+    font,
+    color: NAME_COLOR,
+  });
+  page.drawText(text, {
+    x: xPos + 0.35,
+    y: yPos,
     size,
     font,
     color: NAME_COLOR,

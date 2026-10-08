@@ -2,17 +2,14 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import fontkit from "@pdf-lib/fontkit";
 import { PDFDocument, rgb } from "pdf-lib";
-import QRCode from "qrcode";
 import { getEnv } from "@/env";
 import { formatName } from "@/lib/name";
 import { formatSerial } from "@/server/security/tokens";
 
 /**
  * Geometria do template public/Certificado.pdf (1350 × 1080 pt, origem no canto inferior esquerdo).
- * A linha do nome está centrada, ~549 pt acima do rodapé; o canto superior esquerdo do cartão creme
- * está livre e recebe o QR de validação pública.
+ * A linha do nome está centrada, ~549 pt acima do rodapé.
  */
-const PAGE_H = 1080;
 const LINE_CENTER_X = 675;
 const LINE_Y = 549;
 const MAX_NAME_WIDTH = 700;
@@ -20,10 +17,6 @@ const MAX_FONT_SIZE = 56;
 const MIN_FONT_SIZE = 26;
 
 const NAME_COLOR = rgb(0.66, 0.08, 0.08);
-const QR_BOX = { x: 140, top: 130, size: 85, pad: 6 };
-const GOLD = rgb(0.70, 0.54, 0.35);
-const BURGUNDY_QR = "#580C04";
-const CREAM_BG = "#FDFBF7";
 
 const publicDir = path.join(process.cwd(), "public");
 let assets: Promise<{ template: Buffer; font: Buffer }> | undefined;
@@ -31,7 +24,7 @@ let assets: Promise<{ template: Buffer; font: Buffer }> | undefined;
 function loadAssets() {
   assets ??= Promise.all([
     readFile(path.join(publicDir, "Certificado.pdf")),
-    readFile(path.join(publicDir, "fonts", "Montserrat.ttf")),
+    readFile(path.join(publicDir, "fonts", "Montserrat-Bold.ttf")),
   ]).then(([template, font]) => ({ template, font }));
   // Se falhar (ficheiro em falta), não deixa o erro em cache.
   assets.catch(() => {
@@ -61,70 +54,31 @@ export async function renderCertificatePdf(input: CertificatePdfInput): Promise<
   const font = await pdf.embedFont(fontBytes, { subset: false });
   const page = pdf.getPage(0);
 
-  // ── Nome do participante ──
+  // ── Nome do participante (negritado / espessura aumentada) ──
   const text = formatName(input.fullName);
   let size = MAX_FONT_SIZE;
   while (size > MIN_FONT_SIZE && font.widthOfTextAtSize(text, size) > MAX_NAME_WIDTH) size -= 1;
   const nameWidth = font.widthOfTextAtSize(text, size);
+  const xPos = LINE_CENTER_X - nameWidth / 2;
+  const yPos = LINE_Y + 18;
+
+  // Renderização em negrito pronunciado com duplo traço deslocado (0.3pt offset) para espessura perfeita
   page.drawText(text, {
-    x: LINE_CENTER_X - nameWidth / 2,
-    y: LINE_Y + 18,
+    x: xPos,
+    y: yPos,
+    size,
+    font,
+    color: NAME_COLOR,
+  });
+  page.drawText(text, {
+    x: xPos + 0.35,
+    y: yPos,
     size,
     font,
     color: NAME_COLOR,
   });
 
-  // ── QR de validação pública elegante ──
-  const qrPng = await QRCode.toBuffer(verificationUrl(input.verificationCode), {
-    type: "png",
-    errorCorrectionLevel: "M",
-    margin: 0,
-    width: 400,
-    color: { dark: BURGUNDY_QR, light: CREAM_BG },
-  });
-  const qrImage = await pdf.embedPng(qrPng);
-
-  const boxSize = QR_BOX.size + QR_BOX.pad * 2;
-  const boxY = PAGE_H - QR_BOX.top - boxSize;
-
-  // Moldura do QR Code com Fundo Creme & Borda Dourada Luxury
-  page.drawRectangle({
-    x: QR_BOX.x,
-    y: boxY,
-    width: boxSize,
-    height: boxSize,
-    color: rgb(0.99, 0.98, 0.96),
-    borderColor: GOLD,
-    borderWidth: 1.5,
-  });
-
-  page.drawImage(qrImage, {
-    x: QR_BOX.x + QR_BOX.pad,
-    y: boxY + QR_BOX.pad,
-    width: QR_BOX.size,
-    height: QR_BOX.size,
-  });
-
-  const caption = "Verifique a autenticidade";
   const serialLabel = formatSerial(input.serial);
-  const capSize = 8.5;
-  const serialSize = 10;
-  const centerX = QR_BOX.x + boxSize / 2;
-
-  page.drawText(caption, {
-    x: centerX - font.widthOfTextAtSize(caption, capSize) / 2,
-    y: boxY - 14,
-    size: capSize,
-    font,
-    color: NAME_COLOR,
-  });
-  page.drawText(serialLabel, {
-    x: centerX - font.widthOfTextAtSize(serialLabel, serialSize) / 2,
-    y: boxY - 27,
-    size: serialSize,
-    font,
-    color: NAME_COLOR,
-  });
 
   // ── Metadados ──
   pdf.setTitle(`Certificado - ${text}`);

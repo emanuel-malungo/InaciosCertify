@@ -1,22 +1,13 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import QRCode from "qrcode";
-import jsQR from "jsqr";
+import { useEffect, useState } from "react";
 import {
-  Award,
-  Camera,
   Download,
   Loader2,
-  QrCode,
-  Upload,
   CheckCircle2,
-  AlertTriangle,
-  Copy,
-  Check,
   X,
-  Sparkles,
-  ShieldCheck
+  ShieldCheck,
+  Award
 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { validateFullName } from "@/lib/name";
@@ -35,18 +26,6 @@ type CertInfo = {
   verificationCode: string;
 };
 
-type CheckinInfo = {
-  open: boolean;
-  reason: string;
-  opensAt: string;
-  closesAt: string;
-};
-
-interface CertificateModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
 export default function CertificateModal({ 
   isOpen: externalIsOpen, 
   onClose: externalOnClose 
@@ -55,7 +34,6 @@ export default function CertificateModal({
   onClose?: () => void; 
 }) {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
-
   const isModalOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
 
   const handleClose = () => {
@@ -74,25 +52,12 @@ export default function CertificateModal({
 
   const [ticket, setTicket] = useState<TicketInfo | null>(null);
   const [cert, setCert] = useState<CertInfo | null>(null);
-  const [checkin, setCheckin] = useState<CheckinInfo | null>(null);
-  const [deviceQrUrl, setDeviceQrUrl] = useState<string | null>(null);
 
-  const [activeTab, setActiveTab] = useState<"meu-qr" | "scan">("meu-qr");
-  const [scanMode, setScanMode] = useState<"camera" | "upload">("camera");
-
-  const [scannedToken, setScannedToken] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [initLoading, setInitLoading] = useState(true);
   const [error, setError] = useState("");
-  const [copied, setCopied] = useState(false);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
-  const [showTokenDetails, setShowTokenDetails] = useState(false);
-
-  // Camera State
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [cameraActive, setCameraActive] = useState(false);
 
   // Inicializar dados do ticket quando o modal é aberto
   useEffect(() => {
@@ -107,11 +72,6 @@ export default function CertificateModal({
           const data = await res.json();
           setTicket(data.ticket);
           setCert(data.certificate);
-          setCheckin(data.checkin);
-          if (data.ticket?.token) {
-            const url = await QRCode.toDataURL(data.ticket.token, { margin: 1, width: 280 });
-            setDeviceQrUrl(url);
-          }
         }
       } catch (err) {
         console.error("Erro ao inicializar ingresso:", err);
@@ -123,63 +83,12 @@ export default function CertificateModal({
     init();
   }, [isModalOpen]);
 
-  // Se já tiver certificado gerado ou lido
+  // Se já tiver certificado gerado
   useEffect(() => {
     if (cert) {
       setPdfUrl(cert.verificationCode ? `/api/certificates/pdf?code=${cert.verificationCode}` : "/api/certificates/pdf");
     }
   }, [cert]);
-
-  // Gestão da Câmara para Scanner no Modal
-  useEffect(() => {
-    let stream: MediaStream | null = null;
-    let animId: number;
-
-    async function startCamera() {
-      if (!isModalOpen || activeTab !== "scan" || scanMode !== "camera" || cert) return;
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: "environment" },
-        });
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          videoRef.current.play();
-          setCameraActive(true);
-          scanFrame();
-        }
-      } catch {
-        setError("Não foi possível aceder à câmara. Pode fazer upload da imagem do QR Code.");
-      }
-    }
-
-    function scanFrame() {
-      if (videoRef.current && canvasRef.current && videoRef.current.readyState === videoRef.current.HAVE_ENOUGH_DATA) {
-        const video = videoRef.current;
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext("2d");
-        if (ctx) {
-          canvas.width = video.videoWidth;
-          canvas.height = video.videoHeight;
-          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-          const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          const code = jsQR(imgData.data, imgData.width, imgData.height);
-          if (code && code.data) {
-            handleScannedCode(code.data);
-            return;
-          }
-        }
-      }
-      animId = requestAnimationFrame(scanFrame);
-    }
-
-    startCamera();
-
-    return () => {
-      if (animId) cancelAnimationFrame(animId);
-      if (stream) stream.getTracks().forEach((t) => t.stop());
-      setCameraActive(false);
-    };
-  }, [isModalOpen, activeTab, scanMode, cert]);
 
   // Tratar ESC para fechar
   useEffect(() => {
@@ -192,88 +101,10 @@ export default function CertificateModal({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isModalOpen]);
 
-  async function handleScannedCode(data: string) {
-    setError("");
-    setLoading(true);
-    try {
-      const res = await fetch("/api/tickets/scan", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: data }),
-      });
-      const result = await res.json();
-      if (!res.ok) {
-        setScannedToken(null);
-        setError(result.error?.message || "QR Code inválido.");
-        return;
-      }
-
-      setScannedToken(data);
-      if (result.state === "ALREADY_ISSUED") {
-        setCert(result.certificate);
-        setPdfUrl(result.certificate?.verificationCode ? `/api/certificates/pdf?code=${result.certificate.verificationCode}` : "/api/certificates/pdf");
-      }
-    } catch {
-      setScannedToken(null);
-      setError("Erro ao ler QR Code. Tente novamente.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setError("");
-    setScannedToken(null);
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        let width = img.width;
-        let height = img.height;
-        const maxDim = 1200;
-        if (width > maxDim || height > maxDim) {
-          if (width > height) {
-            height = Math.round((height * maxDim) / width);
-            width = maxDim;
-          } else {
-            width = Math.round((width * maxDim) / height);
-            height = maxDim;
-          }
-        }
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext("2d");
-        if (ctx) {
-          ctx.drawImage(img, 0, 0, width, height);
-          const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          const code = jsQR(imgData.data, imgData.width, imgData.height);
-          if (code && code.data) {
-            handleScannedCode(code.data);
-          } else {
-            setScannedToken(null);
-            setError("Nenhum QR Code válido foi detetado na imagem.");
-          }
-        }
-      };
-      img.src = event.target?.result as string;
-    };
-    reader.readAsDataURL(file);
-  }
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const tokenToUse = activeTab === "meu-qr" ? ticket?.token : scannedToken;
-    if (!tokenToUse) {
-      setError(
-        activeTab === "scan"
-          ? "Nenhum QR Code válido foi detetado. Por favor, leia com a câmara ou carregue uma imagem com QR Code válido."
-          : "QR Code do dispositivo não encontrado."
-      );
+    if (!ticket?.token) {
+      setError("Não foi possível autenticar a sessão. Recarregue a página e tente novamente.");
       return;
     }
 
@@ -289,7 +120,7 @@ export default function CertificateModal({
       const res = await fetch("/api/certificates", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: tokenToUse, fullName: name }),
+        body: JSON.stringify({ token: ticket.token, fullName: name }),
       });
 
       const result = await res.json();
@@ -318,13 +149,6 @@ export default function CertificateModal({
     } else {
       window.open("/api/certificates/pdf?download=1", "_blank");
     }
-  }
-
-  function copyToken() {
-    if (!ticket?.token) return;
-    navigator.clipboard.writeText(ticket.token);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
   }
 
   if (!isModalOpen) return null;
@@ -362,17 +186,6 @@ export default function CertificateModal({
         {/* Corpo do Modal com Scroll Interno */}
         <div className="p-6 sm:p-8 overflow-y-auto space-y-6">
 
-          {/* Aviso da Janela de Check-in */}
-          {checkin && !checkin.open && !cert && (
-            <div className="bg-warning/10 border border-warning/30 rounded-2xl p-4 text-warning-700 flex items-start gap-3 text-xs leading-relaxed">
-              <AlertTriangle className="w-5 h-5 text-warning shrink-0 mt-0.5" />
-              <div>
-                <strong className="font-bold text-text block mb-0.5">Aviso de Credenciamento</strong>
-                O QR Code fica totalmente ativo para leitura e emissão oficial no dia do evento (08 de Outubro de 2026).
-              </div>
-            </div>
-          )}
-
           {/* CASO 1: CERTIFICADO JÁ EMITIDO */}
           {cert ? (
             <div className="text-center space-y-5">
@@ -393,51 +206,9 @@ export default function CertificateModal({
                 </p>
               </div>
 
-              <div className="p-4 bg-background-soft rounded-2xl text-xs text-text-muted border border-border/60">
-                💡 O seu certificado está seguro e associado permanentemente ao seu QR Code. Pode descarregar o ficheiro PDF oficial sempre que necessário.
-              </div>
-
-              {/* Bloco de Token & QR Code de Credenciamento (Acessível após Emissão) */}
-              <div className="bg-surface-warm/40 border border-gold/30 rounded-2xl p-4 text-left space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <QrCode size={18} className="text-primary" />
-                    <span className="font-heading font-bold text-xs uppercase tracking-wider text-primary-dark">
-                      O Seu Token & QR Code de Credenciamento
-                    </span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setShowTokenDetails(!showTokenDetails)}
-                    className="text-[11px] font-heading font-bold text-primary hover:underline px-2.5 py-1 rounded bg-white/90 border border-border shadow-2xs"
-                  >
-                    {showTokenDetails ? "Ocultar QR Code" : "Ver QR Code / Token"}
-                  </button>
-                </div>
-
-                {showTokenDetails && (
-                  <div className="pt-3 border-t border-gold/20 flex flex-col items-center text-center space-y-3 animate-in fade-in duration-200">
-                    {deviceQrUrl && (
-                      <div className="p-3 bg-white border border-gold/30 rounded-xl shadow-xs">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={deviceQrUrl} alt="O seu QR Code de participante" className="w-44 h-44 mx-auto" />
-                      </div>
-                    )}
-                    {ticket?.token && (
-                      <div className="flex items-center gap-2 text-xs font-mono bg-white px-3 py-1.5 rounded-full border border-border max-w-full">
-                        <span className="truncate max-w-[200px] sm:max-w-[280px]">{ticket.token}</span>
-                        <button
-                          type="button"
-                          onClick={copyToken}
-                          className="p-1 rounded hover:bg-surface-warm text-primary transition-colors shrink-0"
-                          title="Copiar token"
-                        >
-                          {copied ? <Check size={14} /> : <Copy size={14} />}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                )}
+              <div className="p-4 bg-background-soft rounded-2xl text-xs text-text-muted border border-border/60 flex items-center gap-3 text-left">
+                <ShieldCheck size={20} className="text-success shrink-0" />
+                <span>O seu certificado foi validado automaticamente e está pronto. Pode visualizar ou descarregar o ficheiro PDF oficial abaixo.</span>
               </div>
 
               {pdfUrl && (
@@ -459,75 +230,24 @@ export default function CertificateModal({
               )}
             </div>
           ) : (
-            /* CASO 2: FLUXO DE GERAÇÃO & LEITURA DE QR CODE */
+            /* CASO 2: FORMULÁRIO DIRETO DE EMISSÃO AUTOMÁTICA */
             <div className="space-y-6">
-              
-              {/* Navegação entre Abas */}
-              <div className="flex border-b border-border">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setActiveTab("meu-qr");
-                    setError("");
-                  }}
-                  className={`flex-1 py-3 font-heading font-bold text-xs uppercase tracking-wider border-b-2 transition-colors flex items-center justify-center gap-2 ${
-                    activeTab === "meu-qr"
-                      ? "border-primary text-primary"
-                      : "border-transparent text-text-muted hover:text-text"
-                  }`}
-                >
-                  <QrCode size={16} /> 1. O Meu QR Code
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setActiveTab("scan");
-                    setScannedToken(null);
-                    setError("");
-                  }}
-                  className={`flex-1 py-3 font-heading font-bold text-xs uppercase tracking-wider border-b-2 transition-colors flex items-center justify-center gap-2 ${
-                    activeTab === "scan"
-                      ? "border-primary text-primary"
-                      : "border-transparent text-text-muted hover:text-text"
-                  }`}
-                >
-                  <Camera size={16} /> 2. Ler Scanner / Upload
-                </button>
-              </div>
-
               {initLoading ? (
                 <div className="py-12 flex flex-col items-center justify-center text-text-muted">
                   <Loader2 className="animate-spin mb-3 text-primary" size={32} />
-                  <p className="text-xs font-medium">A carregar QR Code do seu dispositivo...</p>
+                  <p className="text-xs font-medium">A preparar o seu certificado...</p>
                 </div>
-              ) : activeTab === "meu-qr" ? (
-                /* ABA 1: MEU QR CODE */
+              ) : (
                 <div className="flex flex-col items-center text-center space-y-4">
-                  <p className="text-xs text-text-muted max-w-md">
-                    Este é o seu QR Code único de credenciamento. Apresente este código ou preencha o seu nome abaixo para emitir o certificado.
+                  <div className="w-14 h-14 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                    <Award size={32} />
+                  </div>
+                  <p className="text-xs text-text-muted max-w-md leading-relaxed">
+                    Insira o seu nome completo abaixo para gerar e validar automaticamente o seu certificado oficial de participação.
                   </p>
 
-                  {deviceQrUrl && (
-                    <div className="p-4 bg-white border-2 border-gold/30 rounded-2xl shadow-md my-2">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={deviceQrUrl} alt="O seu QR Code de participante" className="w-48 h-48 sm:w-56 sm:h-56 mx-auto" />
-                    </div>
-                  )}
-
-                  <div className="flex items-center gap-2 text-xs text-text-muted font-mono bg-background-soft px-3 py-1.5 rounded-full border border-border">
-                    <span className="truncate max-w-[180px] sm:max-w-[240px]">{ticket?.token}</span>
-                    <button
-                      type="button"
-                      onClick={copyToken}
-                      className="p-1 rounded hover:bg-surface-warm text-primary transition-colors"
-                      title="Copiar token"
-                    >
-                      {copied ? <Check size={14} /> : <Copy size={14} />}
-                    </button>
-                  </div>
-
-                  {/* FORMULÁRIO DE NOME PARA EMISSÃO */}
-                  <form onSubmit={handleSubmit} className="w-full max-w-md flex flex-col gap-3 pt-4 text-left">
+                  {/* FORMULÁRIO DE NOME PARA EMISSÃO AUTOMÁTICA */}
+                  <form onSubmit={handleSubmit} className="w-full max-w-md flex flex-col gap-3 pt-2 text-left">
                     <label className="text-xs font-heading font-bold uppercase tracking-wider text-foreground">
                       Digite o seu Nome Completo para o Certificado:
                     </label>
@@ -543,78 +263,6 @@ export default function CertificateModal({
                       {loading ? <Loader2 className="animate-spin" size={18} /> : "Gerar O Meu Certificado"}
                     </Button>
                   </form>
-                </div>
-              ) : (
-                /* ABA 2: LEITOR E SCANNER */
-                <div className="flex flex-col items-center text-center space-y-4">
-                  <div className="flex gap-2 mb-2">
-                    <button
-                      type="button"
-                      onClick={() => setScanMode("camera")}
-                      className={`px-4 py-2 rounded-full text-xs font-heading font-bold uppercase transition-all ${
-                        scanMode === "camera"
-                          ? "bg-primary text-white shadow-xs"
-                          : "bg-surface-warm text-text-muted hover:text-text"
-                      }`}
-                    >
-                      Câmara
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setScanMode("upload")}
-                      className={`px-4 py-2 rounded-full text-xs font-heading font-bold uppercase transition-all ${
-                        scanMode === "upload"
-                          ? "bg-primary text-white shadow-xs"
-                          : "bg-surface-warm text-text-muted hover:text-text"
-                      }`}
-                    >
-                      Upload de Imagem
-                    </button>
-                  </div>
-
-                  {scanMode === "camera" ? (
-                    <div className="w-full max-w-md relative aspect-square bg-neutral-950 rounded-2xl overflow-hidden flex items-center justify-center border border-border shadow-inner">
-                      <video ref={videoRef} className="w-full h-full object-cover" />
-                      <canvas ref={canvasRef} className="hidden" />
-                      {!cameraActive && (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 text-white p-4 text-center">
-                          <Camera size={36} className="mb-2 text-gold animate-pulse" />
-                          <p className="text-xs font-medium">A ativar scanner da câmara...</p>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="w-full max-w-md border-2 border-dashed border-gold/40 bg-surface-warm/30 rounded-2xl p-8 text-center flex flex-col items-center justify-center">
-                      <Upload size={36} className="text-primary mb-3" />
-                      <p className="text-xs font-bold text-foreground mb-1">Selecione uma foto ou print do QR Code</p>
-                      <p className="text-[11px] text-text-muted mb-4">Suporta PNG, JPG e WEBP</p>
-                      <label className="cursor-pointer bg-primary text-white font-heading font-bold text-xs uppercase px-5 py-2.5 rounded-full shadow-md hover:bg-primary-hover transition-all">
-                        Escolher Ficheiro
-                        <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
-                      </label>
-                    </div>
-                  )}
-
-                  {/* FORMULÁRIO QUANDO O QR CODE É PASSADO E É VÁLIDO */}
-                  {scannedToken && (
-                    <form onSubmit={handleSubmit} className="w-full max-w-md flex flex-col gap-3 mt-4 text-left">
-                      <div className="p-3 bg-success/10 border border-success/30 rounded-xl text-xs text-success font-bold flex items-center gap-2">
-                        <ShieldCheck className="w-4 h-4 shrink-0" />
-                        <span>QR Code validado! Digite o seu nome para finalizar:</span>
-                      </div>
-                      <input
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="Nome e Apelido"
-                        maxLength={80}
-                        className="w-full rounded-xl border border-border px-4 py-3.5 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm font-medium"
-                      />
-                      <Button type="submit" size="lg" disabled={loading}>
-                        {loading ? <Loader2 className="animate-spin" size={18} /> : "Finalizar & Gerar Certificado"}
-                      </Button>
-                    </form>
-                  )}
                 </div>
               )}
 
