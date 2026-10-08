@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import fontkit from "@pdf-lib/fontkit";
 import { PDFDocument, rgb } from "pdf-lib";
+import QRCode from "qrcode";
 import { getEnv } from "@/env";
 import { formatName } from "@/lib/name";
 import { formatSerial } from "@/server/security/tokens";
@@ -10,6 +11,7 @@ import { formatSerial } from "@/server/security/tokens";
  * Geometria do template public/Certificado.pdf (1350 × 1080 pt, origem no canto inferior esquerdo).
  * A linha do nome está centrada, ~549 pt acima do rodapé.
  */
+const PAGE_H = 1080;
 const LINE_CENTER_X = 675;
 const LINE_Y = 549;
 const MAX_NAME_WIDTH = 700;
@@ -17,6 +19,13 @@ const MAX_FONT_SIZE = 56;
 const MIN_FONT_SIZE = 26;
 
 const NAME_COLOR = rgb(0.66, 0.08, 0.08);
+
+// QR Code do Instagram iTech Solutions (dimensão discreta / não muito grande)
+const INSTAGRAM_URL = "https://www.instagram.com/itechsolutions.gi?stkn=dGV6cHlrZHBjY2Vu&utm_source=qr";
+const QR_BOX = { x: 140, top: 130, size: 85, pad: 6 };
+const GOLD = rgb(0.70, 0.54, 0.35);
+const BURGUNDY_QR = "#580C04";
+const CREAM_BG = "#FDFBF7";
 
 const publicDir = path.join(process.cwd(), "public");
 let assets: Promise<{ template: Buffer; font: Buffer }> | undefined;
@@ -76,6 +85,36 @@ export async function renderCertificatePdf(input: CertificatePdfInput): Promise<
     size,
     font,
     color: NAME_COLOR,
+  });
+
+  // ── QR Code discreto do Instagram ──
+  const qrPng = await QRCode.toBuffer(INSTAGRAM_URL, {
+    type: "png",
+    errorCorrectionLevel: "M",
+    margin: 0,
+    width: 350,
+    color: { dark: BURGUNDY_QR, light: CREAM_BG },
+  });
+  const qrImage = await pdf.embedPng(qrPng);
+
+  const boxSize = QR_BOX.size + QR_BOX.pad * 2;
+  const boxY = PAGE_H - QR_BOX.top - boxSize;
+
+  page.drawRectangle({
+    x: QR_BOX.x,
+    y: boxY,
+    width: boxSize,
+    height: boxSize,
+    color: rgb(0.99, 0.98, 0.96),
+    borderColor: GOLD,
+    borderWidth: 1.5,
+  });
+
+  page.drawImage(qrImage, {
+    x: QR_BOX.x + QR_BOX.pad,
+    y: boxY + QR_BOX.pad,
+    width: QR_BOX.size,
+    height: QR_BOX.size,
   });
 
   const serialLabel = formatSerial(input.serial);
